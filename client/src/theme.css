@@ -1,0 +1,11 @@
+@theme {
+    --color-fadeprimary: #FA7C54;
+    --color-primary: #EB5231;
+    --color-darkgray: #4D4D4D;
+    --color-purple: #571FCF;
+    --color-green: #42BB4E;
+    --color-gray: #F3F3F7;
+    --color-silver: #F5F7FA;
+    --font-sansation: "Sansation", sans-serif;
+    --font-inter: "Inter", sans-serif;
+}
