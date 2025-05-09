@@ -123,7 +123,7 @@ const LandingPage = () => {
           type: "spring",
           stiffness: 100, 
           damping: 25, 
-          duration: 0.5, 
+          duration: 0.5,
         }}
         className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-20 md:hidden"
       >
