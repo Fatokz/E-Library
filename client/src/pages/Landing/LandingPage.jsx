@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import logo from "../../assets/images/Logo.svg";
+import { useNavigate } from "react-router-dom";
+import Logo from "../../components/General/Logo";
 import logo2 from "../../assets/images/Logo2.svg";
 import lms from "../../assets/images/dashboard.svg";
 import library from "../../assets/images/library.png";
@@ -19,11 +20,16 @@ import twitter from "../../assets/icons/twitter.svg";
 import youtube from "../../assets/icons/youtube.svg";
 import Input from "../../components/Landing/Input";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react"; 
+import { Menu, X } from "lucide-react";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const goToRegister = () => {
+    navigate("/register");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,7 +60,7 @@ const LandingPage = () => {
         } else {
           setCount(Math.floor(start)); // Update the state to re-render the count
         }
-      }, 1000 / 60); 
+      }, 1000 / 60);
 
       return () => clearInterval(interval); // Cleanup on component unmount
     }, [targetNumber]);
@@ -75,19 +81,14 @@ const LandingPage = () => {
           backdrop-blur-md
           ${scrolled ? "bg-white/70 py-2 shadow-xs" : "bg-silver py-4"}`}
       >
-        <div className="h-fit w-35 flex gap-1 items-center">
-          <img src={logo} alt="BookSync Logo" className="md:size-10 size-8" />
-          <p className="font-inter text-[12px] md:text-[14px] font-medium">
-            BookSync
-          </p>
-        </div>
+        <Logo />
 
         <div className="hidden md:block h-fit w-fit">
           <ul className="flex text-[14px] font-light gap-10 font-inter">
-            <li>Home</li>
-            <li>Feature</li>
-            <li>Testimonial</li>
-            <li>FAQ</li>
+            <li className="cursor-pointer">Home</li>
+            <li className="cursor-pointer">Feature</li>
+            <li className="cursor-pointer">Integrations</li>
+            <li className="cursor-pointer">FAQ</li>
           </ul>
         </div>
 
@@ -95,7 +96,10 @@ const LandingPage = () => {
           <button className="p-1 text-primary text-[13px] cursor-pointer">
             Login
           </button>
-          <button className="w-[70px] font-light text-[12px] px-3 bg-primary text-white py-1 rounded-[5px] cursor-pointer">
+          <button
+            className="w-[70px] font-light text-[12px] px-3 bg-primary text-white py-1 rounded-[5px] cursor-pointer"
+            onClick={goToRegister}
+          >
             Sign up
           </button>
         </div>
@@ -116,18 +120,18 @@ const LandingPage = () => {
 
       {/* Side dropdown menu */}
       <motion.div
-        initial={{ x: "-100%" }} 
-        animate={{ x: isOpen ? 0 : "-100%" }} 
-        exit={{ x: "-100%" }} 
+        initial={{ x: "-100%" }}
+        animate={{ x: isOpen ? 0 : "-100%" }}
+        exit={{ x: "-100%" }}
         transition={{
           type: "spring",
-          stiffness: 100, 
-          damping: 25, 
-          duration: 0.5,
+          stiffness: 100,
+          damping: 25,
+          duration: 1.0,
         }}
         className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-20 md:hidden"
       >
-        <div className="p-4">
+        <div className="p-4 mt-15">
           <ul>
             <li className="py-2">
               <a href="#home">Home</a>
@@ -144,7 +148,10 @@ const LandingPage = () => {
           </ul>
           <div className="flex gap-4 mt-4">
             <button className="p-1 text-primary text-[13px]">Login</button>
-            <button className="w-[70px] font-light text-[12px] px-3 bg-primary text-white py-1 rounded-[5px]">
+            <button
+              className="w-[70px] font-light text-[12px] px-3 bg-primary text-white py-1 rounded-[5px]"
+              onClick={goToRegister}
+            >
               Sign up
             </button>
           </div>
@@ -168,7 +175,10 @@ const LandingPage = () => {
               Track books, manage members, and automate borrowing in one
               seamless platform.
             </p>
-            <button className="w-[70px] text-[12px] px-3 bg-primary text-white py-2 font-light rounded-[5px] cursor-pointer">
+            <button
+              className="w-[70px] text-[12px] px-3 bg-primary text-white py-2 font-light rounded-[5px] cursor-pointer"
+              onClick={goToRegister}
+            >
               Register
             </button>
           </div>
@@ -227,7 +237,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* Section 3 */}
-      <section className="h-fit md:h-[75vh] bg-silver py-5 px-10 md:px-10 lg:px-30">
+      <section className="h-fit md:h-fit bg-silver py-5 px-10 md:px-10 lg:px-30">
         <div className="flex flex-col gap-10 justify-center">
           <div>
             <div className="flex flex-col gap-2 text-center items-center">
@@ -458,7 +468,10 @@ const LandingPage = () => {
             Transform Your Library Operations Today
           </h3>
 
-          <button className="w-fit justify-center items-center gap-2 flex text-[12px] px-3 bg-primary text-white py-2 font-light rounded-[5px] cursor-pointer">
+          <button
+            className="w-fit justify-center items-center gap-2 flex text-[12px] px-3 bg-primary text-white py-2 font-light rounded-[5px] cursor-pointer"
+            onClick={goToRegister}
+          >
             Get Demo
             <MoveRight size={12} className="font-light" />
           </button>
