@@ -1,0 +1,266 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "BookSync Auth API",
+    "description": "API documentation for BookSync authentication endpoints.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8000",
+  "basePath": "/api/auth",
+  "tags": [
+    {
+      "name": "User",
+      "description": "User Authentication"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin Authentication"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/user-register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/verify-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "otp": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/login-user": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin-register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserRegistrationRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "johndoe@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "SecurePassword123"
+        }
+      }
+    },
+    "UserRegistrationResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OTP sent successfully, please check your email"
+        }
+      }
+    },
+    "VerifyUserRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "johndoe@example.com"
+        },
+        "otp": {
+          "type": "string",
+          "example": "1234"
+        },
+        "password": {
+          "type": "string",
+          "example": "SecurePassword123"
+        }
+      }
+    },
+    "VerifyUserResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "User registered successfully"
+        }
+      }
+    },
+    "LoginUserRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "johndoe@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "SecurePassword123"
+        }
+      }
+    },
+    "LoginUserResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Login successful"
+        },
+        "accessToken": {
+          "type": "string",
+          "example": "jwt-access-token"
+        },
+        "refreshToken": {
+          "type": "string",
+          "example": "jwt-refresh-token"
+        }
+      }
+    },
+    "AdminRegistrationRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Admin User"
+        },
+        "email": {
+          "type": "string",
+          "example": "admin@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "AdminPassword123"
+        }
+      }
+    },
+    "AdminRegistrationResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OTP sent successfully, please check your email"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Error message"
+        },
+        "field": {
+          "type": "string",
+          "example": "email"
+        }
+      }
+    }
+  }
+}
