@@ -20,25 +20,42 @@ const Onboard = () => {
     initialValues: {
       name: "",
       email: "",
+      password: "",
+      confirmPassword: "",
     },
 
     validationSchema: Yup.object({
-      name: Yup.string().required("Name is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
+      name: Yup.string().required("Username is required"),
+      email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
+      password: Yup.string()
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+          "Password must be at least 6 characters, include an uppercase letter, a lowercase letter, a number, and a special character"
+        )
+        .required("Password is required"),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password")], "Passwords must match")
+        .required("Confirm Password is required"),
     }),
 
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
 
+      const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      };
+
       try {
-        const response = await axios.post("/api/user-register", values, {
-          withCredentials: true,
-        });
+        const response = await axios.post("api/auth/user-register", payload);
         console.log("Register response:", response.data);
 
         toast.success("OTP sent successfully!");
         resetForm();
-        // navigate("/verify");
+        navigate("/verify", { state: values });
       } catch (error) {
         console.error("Error response:", error?.response?.data);
 
@@ -70,7 +87,7 @@ const Onboard = () => {
 
         {/* Form */}
         <form onSubmit={formik.handleSubmit} className="w-full overflow-hidden">
-          <div className="h-[185px]  flex flex-col gap-6 overflow-y-auto hide-scrollbar">
+          <div className="h-fit  flex flex-col gap-6 overflow-y-auto hide-scrollbar">
             <div className="flex flex-col w-full gap-1">
               <Inputfield
                 title="Name"
@@ -99,9 +116,39 @@ const Onboard = () => {
                 </div>
               )}
             </div>
+            <div className="flex flex-col w-full gap-1">
+              <Inputfield
+                title="Password"
+                placeholder="******"
+                type="password"
+                name="password"
+                {...formik.getFieldProps("password")}
+              />
+              {formik.touched.password && formik.errors.password && (
+                <div className="text-red-600 text-[10px]">
+                  {formik.errors.password}
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col w-full gap-1">
+              <Inputfield
+                title="Confirm Password"
+                placeholder="******"
+                type="password"
+                name="confirmPassword"
+                {...formik.getFieldProps("confirmPassword")}
+              />
+              {formik.touched.confirmPassword &&
+                formik.errors.confirmPassword && (
+                  <div className="text-red-600 text-[10px]">
+                    {formik.errors.confirmPassword}
+                  </div>
+                )}
+            </div>
           </div>
 
-          <div className="h-fit w-full  mt-40 flex flex-col gap-3 ">
+          <div className="h-fit w-full  mt-10 flex flex-col gap-3 ">
             <Button
               type="submit"
               // disabled={

@@ -1,85 +1,37 @@
 import React, { useState } from "react";
 import TopWave from "../../components/Auth/Topwave";
 import Logo from "../../components/General/Logo";
-import Inputfield from "../../components/Auth/Inputfield";
+import Otp from "../../components/Auth/Otp";
+// import Inputfield from "../../components/Auth/Inputfield";
 import Button from "../../components/General/Button";
 import Loader from "../../components/General/Loader";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const VerifyUser = () => {
   const navigate = useNavigate();
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
-  // const handleLogin = () => navigate("/signin");
-
-  
-const formik = useFormik({
-  initialValues: {
-    name: "",
-    otp: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  },
-
-  validationSchema: Yup.object({
-    name: Yup.string().required("Username is required"),
-    otp: Yup.string().required("OTP is required"),
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
-    password: Yup.string()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-        "Password must be at least 6 characters, include an uppercase letter, a lowercase letter, a number, and a special character"
-      )
-      .required("Password is required"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Confirm Password is required"),
-  }),
-
-  onSubmit: async (values, { setSubmitting, resetForm }) => {
-    setSubmitting(true);
+  console.log(location.state);
+  const handleVerify = async () => {
     setLoading(true);
-
-    const payload = {
-      name: values.name,
-      email: values.email,
-      otp: values.otp,
-      password: values.password,
-    };
-
     try {
-      const response = await axios.post("/api/verify-user", payload);
+      const otpCode = otp.join("");
+      console.log(otpCode);
 
-      toast.success("Verification successful!");
-      resetForm();
-      navigate("/signin");
+      if (otpCode.length !== 4) {
+        toast.error("Please enter the 4-digit code.");
+        setLoading(false);
+        return;
+      }
     } catch (error) {
-      console.error("Backend error:", error?.response?.data || error.message);
-
-      const errorData = error?.response?.data;
-
-      const errorMessage =
-        typeof errorData === "string"
-          ? errorData
-          : errorData?.detail ||
-            errorData?.message ||
-            Object.values(errorData || {})?.[0] ||
-            "Something went wrong. Please try again.";
-
-      toast.error(errorMessage);
-    } finally {
-      setSubmitting(false);
+      console.error("Verification error:", error);
+      toast.error("Something went wrong during verification.");
       setLoading(false);
     }
-  },
-});
+  };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b to-[#ffffff] text-white flex flex-col gap-5 items-center justify-center">
@@ -96,112 +48,25 @@ const formik = useFormik({
         </div>
 
         {/* Form */}
-        <form onSubmit={formik.handleSubmit} className="w-full overflow-hidden">
-          <div className="max-h-[400px] flex flex-col gap-2 overflow-y-auto hide-scrollbar">
-            <div className="flex flex-col w-full">
-              <Inputfield
-                title="Username"
-                placeholder="User"
-                type="text"
-                name="name"
-                {...formik.getFieldProps("name")}
-              />
-              {formik.touched.name && formik.errors.name && (
-                <div className="text-red-600 text-[10px]">
-                  {formik.errors.name}
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-col w-full gap-1">
-              <Inputfield
-                title="Otp"
-                placeholder="0934"
-                type="pin"
-                name="otp"
-                {...formik.getFieldProps("otp")}
-              />
-              {formik.touched.otp && formik.errors.otp && (
-                <div className="text-red-600 text-[10px]">
-                  {formik.errors.otp}
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-col w-full gap-1">
-              <Inputfield
-                title="Email"
-                placeholder="user@gmail.com"
-                type="email"
-                name="email"
-                {...formik.getFieldProps("email")}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className="text-red-600 text-[10px]">
-                  {formik.errors.email}
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-col w-full gap-1">
-              <Inputfield
-                title="Password"
-                placeholder="******"
-                type="password"
-                name="password"
-                {...formik.getFieldProps("password")}
-              />
-              {formik.touched.password && formik.errors.password && (
-                <div className="text-red-600 text-[10px]">
-                  {formik.errors.password}
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-col w-full gap-1">
-              <Inputfield
-                title="Confirm Password"
-                placeholder="******"
-                type="password"
-                name="confirmPassword"
-                {...formik.getFieldProps("confirmPassword")}
-              />
-              {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword && (
-                  <div className="text-red-600 text-[10px]">
-                    {formik.errors.confirmPassword}
-                  </div>
-                )}
-            </div>
+        {/* <Otp /> */}
+        <div className="mt-5">
+          <Otp otp={otp} setOtp={setOtp} />
+          <div className="h-[18px]  w-[295px]">
+            <p className="text-[#5B5B5B] text-xs font-albert font-semibold">
+              Didn’t receive SMS?{" "}
+              <span className="text-lemon">Resend code</span>
+            </p>
           </div>
-
-          <div className=" flex flex-col gap-3 mt-4">
-            <Button
-              type="submit"
-              // disabled={
-              //   loading ||
-              //   !formik.isValid ||
-              //   !formik.dirty ||
-              //   formik.isSubmitting
-              // }
-              className="relative w-full"
-            >
-              {loading ? <Loader /> : "Verify"}
-            </Button>
-
-            {/* <div className="z-50 text-center text-black text-[12px]">
-              <p>
-                Already a User?{" "}
-                <span
-                  className="cursor-pointer text-primary font-medium"
-                  onClick={handleLogin}
-                >
-                  Login
-                </span>
-              </p>
-            </div> */}
-          </div>
-        </form>
+        </div>
+        <div className="relative flex flex-col gap-4 items-center h-60 w-full">
+          <Button
+            onClick={handleVerify}
+            disabled={otp.join("").length !== 4 || loading}
+            className="w-full"
+          >
+            {loading ? <Loader /> : "Verify"}
+          </Button>
+        </div>
       </div>
     </div>
   );

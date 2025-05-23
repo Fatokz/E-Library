@@ -30,14 +30,19 @@ const Signin = () => {
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
 
+      const payload = {
+        email: values.email,
+        password: values.password,
+      };
+
       try {
-        const response = await axios.post("/api/login-user", values, {
+        const response = await axios.post("/api/auth/login-user", payload, {
           withCredentials: true,
         });
 
         toast.success("Sign In successful!");
         resetForm();
-        // navigate("/app/home"); // Uncomment when needed
+        navigate("/dashboard");
       } catch (error) {
         console.error("Error response:", error?.response?.data);
 
@@ -127,12 +132,12 @@ const Signin = () => {
           <div className="h-fit w-full  mt-40 flex flex-col gap-3 ">
             <Button
               type="submit"
-            //   disabled={
-            //     loading ||
-            //     !formik.isValid ||
-            //     !formik.dirty ||
-            //     formik.isSubmitting
-            //   }
+              //   disabled={
+              //     loading ||
+              //     !formik.isValid ||
+              //     !formik.dirty ||
+              //     formik.isSubmitting
+              //   }
               className="relative text-white w-full"
             >
               {loading ? <Loader /> : "Login"}
