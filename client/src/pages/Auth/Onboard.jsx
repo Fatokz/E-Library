@@ -7,7 +7,7 @@ import Loader from "../../components/General/Loader";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { toast } from "sonner";
 
 const Onboard = () => {
@@ -50,10 +50,7 @@ const Onboard = () => {
       };
 
       try {
-        const response = await axios.post(
-          "localhost:8080/api/auth/user-register",
-          payload
-        );
+        const response = await axios.post("auth/user-register", payload);
         console.log("Register response:", response.data);
 
         toast.success("OTP sent successfully!");

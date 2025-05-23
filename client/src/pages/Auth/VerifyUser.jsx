@@ -7,14 +7,15 @@ import Button from "../../components/General/Button";
 import Loader from "../../components/General/Loader";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
+import axios from "../../utils/axios";
 const VerifyUser = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
 
-  console.log(location.state);
+  const data = location.state;
+
   const handleVerify = async () => {
     setLoading(true);
     try {
@@ -26,9 +27,17 @@ const VerifyUser = () => {
         setLoading(false);
         return;
       }
+      const response = await axios.post("/auth/verify-user", {
+        ...data,
+        otp: otpCode,
+      });
+      toast.success(response.data.message);
+      navigate("/signin")
     } catch (error) {
       console.error("Verification error:", error);
-      toast.error("Something went wrong during verification.");
+      toast.error("OTP expired or invalid");
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };

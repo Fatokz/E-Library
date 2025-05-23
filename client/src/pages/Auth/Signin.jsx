@@ -7,7 +7,7 @@ import Loader from "../../components/General/Loader";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { toast } from "sonner";
 
 const Signin = () => {
@@ -36,16 +36,22 @@ const Signin = () => {
       };
 
       try {
-        const response = await axios.post("/api/auth/login-user", payload, {
+        const response = await axios.post("/auth/login", payload, {
           withCredentials: true,
         });
-
+        if (response.data.role === "admin") {
+          // localStorage.setItem("token", response.data.accessToken);
+          navigate("/admin");
+        } else if (response.data.role === "user") {
+          // localStorage.setItem("token", response.data.accessToken);
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
         toast.success("Sign In successful!");
         resetForm();
-        navigate("/dashboard");
       } catch (error) {
         console.error("Error response:", error?.response?.data);
-
         const errorMessage =
           error?.response?.data?.message ||
           Object.values(error?.response?.data || {})?.[0]?.[0] ||
