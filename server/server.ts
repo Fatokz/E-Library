@@ -9,7 +9,7 @@ import { errorHandler } from "./src/utils/errorHandler";
 import connection from "./src/utils/database/connect";
 const swaggerDocumentation = require("./src/swagger-output.json");
 
-const port = process.env.PORT || 5173;
+const port = process.env.PORT || 8080;
 
 const app = express();
 

@@ -50,7 +50,10 @@ const Onboard = () => {
       };
 
       try {
-        const response = await axios.post("api/auth/user-register", payload);
+        const response = await axios.post(
+          "localhost:8080/api/auth/user-register",
+          payload
+        );
         console.log("Register response:", response.data);
 
         toast.success("OTP sent successfully!");

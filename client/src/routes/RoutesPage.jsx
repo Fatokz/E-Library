@@ -20,16 +20,16 @@ const RoutesPage = () => {
         {/* Public routes */}
         <Route path="/" element={<Splash />} />
         <Route path="/welcome" element={<LandingPage />} />
-        <Route path="/onboard" element={<Onboard />} />
+        <Route path="/signup" element={<Onboard />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/verify" element={<VerifyUser />} />
 
         {/* Dashboard layout with nested routes */}
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<Home />} /> {/* /dashboard */}
-          <Route path="search" element={<Search />} /> 
-          <Route path="shelf" element={<Shelf />} /> 
-          <Route path="todo" element={<TodoList />} /> 
+          <Route path="search" element={<Search />} />
+          <Route path="shelf" element={<Shelf />} />
+          <Route path="todo" element={<TodoList />} />
         </Route>
       </Routes>
     </Router>
