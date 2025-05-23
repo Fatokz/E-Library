@@ -70,7 +70,7 @@ export const verifyUser = async (
   }
 };
 
-export const loginUser = async (
+export const login = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -81,23 +81,30 @@ export const loginUser = async (
       return next(new ValidationError("All fields are required"));
     }
 
-    const user = await User.findOne({ email });
-    if (!user) {
+    // Try to find user
+    let account = await User.findOne({ email });
+    let role = "user";
+    if (!account) {
+      // Try to find admin
+      account = await Admin.findOne({ email });
+      role = "admin";
+    }
+    if (!account) {
       return next(new ValidationError("Invalid credentials"));
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, account.password);
     if (!isPasswordValid) {
       return next(new ValidationError("Invalid credentials"));
     }
 
     const accessToken = jwt.sign(
-      { id: user.id },
+      { id: account.id, role },
       process.env.ACCESS_TOKEN_SECRET as string,
       { expiresIn: "15m" }
     );
     const refreshToken = jwt.sign(
-      { id: user.id },
+      { id: account.id, role },
       process.env.REFRESH_TOKEN_SECRET as string,
       { expiresIn: "7d" }
     );
@@ -108,6 +115,7 @@ export const loginUser = async (
       message: "Login successful",
       accessToken,
       refreshToken,
+      role,
     });
   } catch (error) {
     next(error);
@@ -137,6 +145,35 @@ export const adminRegistration = async (
     res.status(200).json({
       message: "OTP sent successfully, please check your email",
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verifyAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name, email, otp, password } = req.body;
+
+    if (!name || !email || !otp || !password) {
+      return next(new ValidationError("All fields are required"));
+    }
+
+    await verifyOtp(email, otp, next);
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = new Admin({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    await newAdmin.save();
+
+    res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
     next(error);
   }

@@ -1,0 +1,8 @@
+AUTHENTICATION (admin/user)
+       - User or admin must send email, password and name to the /user(or admin)-register endpoint 
+       - User would be sent an email 
+       - The /verify-user(or admin) endpoint the user must still send email, password, name and otp
+    
+    -- FOR LOGIN -- 
+        -The endpoint /login would check if the user is either an admin or user
+       - A role variable enum { "admin" | "user"} would be attached to the accessToken (15m) and refreshToken (7d)
