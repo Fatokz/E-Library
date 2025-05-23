@@ -7,17 +7,19 @@ const Home = () => {
 
   useEffect(() => {
     const getGreeting = () => {
-      const now = new Date().toLocaleString("en-US", {
+      const hour = new Date().toLocaleString("en-US", {
         timeZone: "Africa/Lagos",
-        hour: "numeric",
+        hour: "2-digit",
         hour12: false,
       });
 
-      const hour = parseInt(now, 10);
+      const hourInt = parseInt(hour, 10);
 
-      if (hour >= 5 && hour < 12) return "Good morning";
-      if (hour >= 12 && hour < 17) return "Good afternoon";
-      return "Good evening";
+      if (hourInt >= 5 && hourInt < 12) return "Good morning";
+      if (hourInt >= 12 && hourInt < 17) return "Good afternoon";
+      if (hourInt >= 17 && hourInt < 24) return "Good evening";
+      // For 0-4 (midnight to 4:59am)
+      return "Good morning";
     };
 
     setGreeting(getGreeting());

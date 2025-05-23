@@ -14,7 +14,7 @@ const Signin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleSignup = () => navigate("/onboard");
+  const handleSignup = () => navigate("/signup");
 
   const formik = useFormik({
     initialValues: {
@@ -40,10 +40,10 @@ const Signin = () => {
           withCredentials: true,
         });
         if (response.data.role === "admin") {
-          // localStorage.setItem("token", response.data.accessToken);
+          localStorage.setItem("token", response.data.accessToken);
           navigate("/admin");
         } else if (response.data.role === "user") {
-          // localStorage.setItem("token", response.data.accessToken);
+          localStorage.setItem("token", response.data.accessToken);
           navigate("/dashboard");
         } else {
           navigate("/");
@@ -135,15 +135,15 @@ const Signin = () => {
             </div>
           </div>
 
-          <div className="h-fit w-full  mt-40 flex flex-col gap-3 ">
+          <div className="h-fit w-full  mt-20 flex flex-col gap-3 ">
             <Button
               type="submit"
-              //   disabled={
-              //     loading ||
-              //     !formik.isValid ||
-              //     !formik.dirty ||
-              //     formik.isSubmitting
-              //   }
+                disabled={
+                  loading ||
+                  !formik.isValid ||
+                  !formik.dirty ||
+                  formik.isSubmitting
+                }
               className="relative text-white w-full"
             >
               {loading ? <Loader /> : "Login"}
