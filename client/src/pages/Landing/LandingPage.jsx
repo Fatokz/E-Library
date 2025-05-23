@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../components/General/Logo";
 import logo2 from "../../assets/images/Logo2.svg";
@@ -19,17 +19,34 @@ import instagram from "../../assets/icons/instagram.svg";
 import twitter from "../../assets/icons/twitter.svg";
 import youtube from "../../assets/icons/youtube.svg";
 import Input from "../../components/Landing/Input";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef(null); // Ref to the menu to detect outside clicks
 
-  const goToRegister = () => {
-    navigate("/register");
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    // Event listener to close menu when clicking outside
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const goToRegister = () => navigate("/onboard");
+
+  const goToSignIn = () => navigate("/signin");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -79,9 +96,12 @@ const LandingPage = () => {
         className={`fixed top-0 z-50 w-full flex items-center justify-between 
           px-6 md:px-10 lg:px-30 transition-all duration-300 
           backdrop-blur-md
-          ${scrolled ? "bg-white/70 py-2 shadow-xs" : "bg-silver py-4"}`}
+          bg-white/70 py-2 shadow-xs`}
       >
-        <Logo />
+        <div>
+          {" "}
+          <Logo />
+        </div>
 
         <div className="hidden md:block h-fit w-fit">
           <ul className="flex text-[14px] font-light gap-10 font-inter">
@@ -93,7 +113,10 @@ const LandingPage = () => {
         </div>
 
         <div className="h-fit w-fit md:flex gap-4 hidden">
-          <button className="p-1 text-primary text-[13px] cursor-pointer">
+          <button
+            className="p-1 text-primary text-[13px] cursor-pointer"
+            onClick={goToSignIn}
+          >
             Login
           </button>
           <button
@@ -108,56 +131,78 @@ const LandingPage = () => {
         <div
           className="cursor-pointer block md:hidden text-primary"
           onClick={toggleMenu}
+          aria-label="Toggle menu"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && toggleMenu()}
         >
-          {/* Conditionally render Menu or X icon */}
-          {isOpen ? (
-            <X size={24} /> // Show "X" when the menu is open
-          ) : (
-            <Menu size={24} /> // Show hamburger icon when the menu is closed
-          )}
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
         </div>
       </nav>
 
-      {/* Side dropdown menu */}
-      <motion.div
-        initial={{ x: "-100%" }}
-        animate={{ x: isOpen ? 0 : "-100%" }}
-        exit={{ x: "-100%" }}
-        transition={{
-          type: "spring",
-          stiffness: 100,
-          damping: 25,
-          duration: 1.0,
-        }}
-        className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-20 md:hidden"
-      >
-        <div className="p-4 mt-15">
-          <ul>
-            <li className="py-2">
-              <a href="#home">Home</a>
-            </li>
-            <li className="py-2">
-              <a href="#feature">Feature</a>
-            </li>
-            <li className="py-2">
-              <a href="#testimonial">Testimonial</a>
-            </li>
-            <li className="py-2">
-              <a href="#faq">FAQ</a>
-            </li>
-          </ul>
-          <div className="flex gap-4 mt-4">
-            <button className="p-1 text-primary text-[13px]">Login</button>
-            <button
-              className="w-[70px] font-light text-[12px] px-3 bg-primary text-white py-1 rounded-[5px]"
-              onClick={goToRegister}
-            >
-              Sign up
-            </button>
-          </div>
-        </div>
-      </motion.div>
-
+      {/* Mobile Dropdown Menu with AnimatePresence */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ y: "-100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "-100%" }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 25,
+              duration: 0.5,
+            }}
+            className="fixed top-0 left-0 w-full bg-white shadow-lg z-20 md:hidden"
+            ref={menuRef}
+          >
+            <div className="p-4 mt-16">
+              <ul>
+                <li className="py-2">
+                  <a href="#home" onClick={() => setIsOpen(false)}>
+                    Home
+                  </a>
+                </li>
+                <li className="py-2">
+                  <a href="#feature" onClick={() => setIsOpen(false)}>
+                    Feature
+                  </a>
+                </li>
+                <li className="py-2">
+                  <a href="#testimonial" onClick={() => setIsOpen(false)}>
+                    Testimonial
+                  </a>
+                </li>
+                <li className="py-2">
+                  <a href="#faq" onClick={() => setIsOpen(false)}>
+                    FAQ
+                  </a>
+                </li>
+              </ul>
+              <div className="flex gap-4 mt-4">
+                <button
+                  className="p-1 text-primary text-[13px] cursor-pointer"
+                  onClick={() => {
+                    setIsOpen(false);
+                    goToSignIn();
+                  }}
+                >
+                  Login
+                </button>
+                <button
+                  className="w-[70px] font-light cursor-pointer text-[12px] px-3 bg-primary text-white py-1 rounded-[5px]"
+                  onClick={() => {
+                    setIsOpen(false);
+                    goToRegister();
+                  }}
+                >
+                  Sign up
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Section 1 */}
       <motion.section
         className="md:h-[90vh] h-fit md:flex md:items-center md:justify-center w-full bg-silver px-10 md:px-10 lg:px-30"
@@ -346,7 +391,6 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Second Column */}
           {/* Second Column */}
           <div className="h-50 w-full md:w-1/2 grid grid-cols-2 items-center">
             <div className="h-20 w-[100%] flex items-center justify-center gap-4">

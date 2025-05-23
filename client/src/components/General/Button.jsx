@@ -1,9 +1,15 @@
 import React from "react";
 
-const Button = () => {
+const Button = ({children, type, onClick}) => {
   return (
     <>
-      <button className="h-10 w-full bg-primary p-2 text-[13px] rounded-lg cursor-pointer">Register</button>
+      <button
+        className="h-10 w-full bg-primary p-2 text-[13px] rounded-lg cursor-pointer"
+        type={type}
+        onClick={onClick}
+      >
+        {children}
+      </button>
     </>
   );
 };

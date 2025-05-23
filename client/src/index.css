@@ -13,3 +13,9 @@
     scrollbar-width: none;
     /* Firefox */
 }
+
+@layer base {
+    body {
+        font-family: "Sansation", sans-serif;
+    }
+}
