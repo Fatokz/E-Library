@@ -7,10 +7,13 @@ import Loader from "../../components/General/Loader";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../store/authSlice";
 import axios from "../../utils/axios";
 import { toast } from "sonner";
 
 const Signin = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -39,14 +42,18 @@ const Signin = () => {
         const response = await axios.post("/auth/login", payload, {
           withCredentials: true,
         });
+        dispatch(
+          loginSuccess({
+            accessToken: response.data.accessToken,
+            refreshToken: response.data.refreshToken,
+            role: response.data.role,
+            user: response.data.user || null,
+          })
+        );
         if (response.data.role === "admin") {
-          localStorage.setItem("token", response.data.accessToken);
           navigate("/admin");
-        } else if (response.data.role === "user") {
-          localStorage.setItem("token", response.data.accessToken);
-          navigate("/dashboard");
         } else {
-          navigate("/");
+          navigate("/dashboard");
         }
         toast.success("Sign In successful!");
         resetForm();

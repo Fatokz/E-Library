@@ -18,6 +18,7 @@ import AdminDashboard from "../pages/Admin/AdminDashboard";
 import Catalog from "../pages/Admin/Catalog";
 import Books from "../pages/Admin/Books";
 import User from "../pages/Admin/User";
+import ProtectedRoute from "./ProtectedRoute";
 
 const RoutesPage = () => {
   return (
@@ -31,20 +32,24 @@ const RoutesPage = () => {
         <Route path="/signin" element={<Signin />} />
         <Route path="/verify" element={<VerifyUser />} />
 
-        {/* Dashboard layout for user with nested routes */}
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route index element={<Home />} /> {/* /dashboard */}
-          <Route path="search" element={<Search />} />
-          <Route path="shelf" element={<Shelf />} />
-          <Route path="todo" element={<TodoList />} />
+        {/* Protected user dashboard */}
+        <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<Home />} />
+            <Route path="search" element={<Search />} />
+            <Route path="shelf" element={<Shelf />} />
+            <Route path="todo" element={<TodoList />} />
+          </Route>
         </Route>
 
-        {/* Dashboard layout for user with nested routes */}
-        <Route path="/admin" element={<SuperDashboard />}>
-          <Route index element={<AdminDashboard />} /> {/* /dashboard */}
-          <Route path="catalog" element={<Catalog />} />
-          <Route path="books" element={<Books />} />
-          <Route path="user" element={<User />} />
+        {/* Protected admin dashboard */}
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<SuperDashboard />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="catalog" element={<Catalog />} />
+            <Route path="books" element={<Books />} />
+            <Route path="user" element={<User />} />
+          </Route>
         </Route>
       </Routes>
     </Router>
