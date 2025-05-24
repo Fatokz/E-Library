@@ -17,7 +17,6 @@ const SideNav = () => {
       document.body.style.overflow = "auto";
     }
   }, [showModal]);
-  
 
   const confirmLogout = () => {
     localStorage.removeItem("token");
