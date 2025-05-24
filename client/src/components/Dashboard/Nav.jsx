@@ -33,7 +33,7 @@ const ClockDateBadge = () => {
       .replace(/ /g, "-");
 
   return (
-    <div className="flex items-center gap-3 shadow-sm px-3 h-10 rounded-full border border-primary text-black text-xs whitespace-nowrap">
+    <div className="flex items-center gap-3 bg-white shadow-sm px-3 h-10 rounded-full border border-primary text-black text-xs whitespace-nowrap">
       <div className="flex items-center gap-1">
         <FaRegClock className="text-primary" />
         <span className="text-[12px]">{formatTime(time)}</span>
@@ -76,7 +76,7 @@ const Nav = () => {
       <div className="hidden md:flex items-center gap-3 flex-1 min-w-0">
         {/* Search */}
         <div className="flex items-center h-10 rounded-full border border-primary px-2 w-full max-w-xs bg-white shadow-sm">
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-xs font-medium cursor-pointer">
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white text-xs font-medium cursor-pointer">
             <p>All</p>
             <MdArrowDropDown className="text-base" />
           </div>
@@ -93,7 +93,7 @@ const Nav = () => {
         </div>
 
         {/* Language Selector */}
-        <div className="flex items-center gap-2 h-10 px-3 rounded-full border border-primary text-black cursor-pointer text-xs shadow-sm">
+        <div className="flex items-center gap-2 h-10 px-3 rounded-full bg-white border border-primary text-black cursor-pointer text-xs shadow-sm">
           <FaLanguage className="text-primary" />
           <p>Lang</p>
           <MdArrowDropDown className="text-base" />
@@ -158,7 +158,7 @@ const Nav = () => {
           </div>
 
           {/* Mobile Profile */}
-          <div className="flex items-center h-10 rounded-full border border-primary w-full shadow-sm gap-2 px-3 cursor-pointer text-xs">
+          <div className="flex items-center h-10 rounded-full bg-white border border-primary w-full shadow-sm gap-2 px-3 cursor-pointer text-xs">
             <img
               src={profile}
               alt="profile"

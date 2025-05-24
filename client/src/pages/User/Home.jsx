@@ -27,7 +27,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="w-[90%] max-w-7xl mx-auto  h-[85vh]  flex  flex-col gap-6 overflow-x-hidden px-4 py-6 hide-scrollbar">
+    <div className="w-[100%] max-w-7xl mx-auto  h-[85vh]  flex  flex-col gap-6 overflow-x-hidden px-4 py-6 hide-scrollbar">
       {/* Top Section */}
       <div className="flex flex-col lg:flex-row gap-4 w-full">
         {/* Quote Box */}
@@ -71,7 +71,38 @@ const Home = () => {
       {/* Greeting and Recommendations */}
       <div className="flex flex-col gap-3">
         <p className="text-lg md:text-2xl font-medium">{greeting}</p>
-        <p className="font-light text-sm text-gray-700">Recommended for You</p>
+        <p className="font-medium text-sm text-gray-700">Recommended for You</p>
+
+        <div className="h-62 w-full gap-4  flex items-center overflow-x-auto scrollbar-hide rounded-md snap-x snap-mandatory">
+          {Array(6)
+            .fill(null)
+            .map((_, i) => (
+              <div
+                key={i}
+                className="min-w-[8rem] md:min-w-[8.5rem] rounded-lg p-2 bg-white shadow-md flex-shrink-0 snap-start"
+              >
+                <div className="w-full h-32 mb-2">
+                  <img
+                    src={learn}
+                    alt={`Recommendation ${i + 1}`}
+                    className="w-full h-full object-cover rounded"
+                  />
+                </div>
+                <div className="text-xs font-medium space-y-1">
+                  <p className="truncate">Learn UX: Design Great</p>
+                  <p className="text-gray-600">Stev Krug, 2000</p>
+                  <p className="text-yellow-500">
+                    4.5 <span className="text-gray-400">/5</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* Greeting and Recommendations */}
+      <div className="flex flex-col gap-3">
+        <p className="font-medium text-sm text-gray-700">Recent Readings</p>
 
         <div className="h-62 w-full gap-4  flex items-center overflow-x-auto scrollbar-hide rounded-md snap-x snap-mandatory">
           {Array(6)
