@@ -1,11 +1,14 @@
+// This component is a sidebar navigation menu for an admin dashboard.
+// It includes links to different sections of the admin panel, such as Dashboard, Catalog, Books, and User.;
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../General/Logo";
 import Logo2 from "../../assets/images/Logo.svg";
+import { FaCompass } from "react-icons/fa";
 import { RiDashboardHorizontalFill, RiBookShelfFill } from "react-icons/ri";
-import { IoIosSearch } from "react-icons/io";
 import { BiLogOut } from "react-icons/bi";
-import { LuListTodo } from "react-icons/lu";
+import { IoBookSharp } from "react-icons/io5";
+import { FaUsers } from "react-icons/fa";
 
 const SideNav = () => {
   const [showModal, setShowModal] = useState(false);
@@ -19,7 +22,7 @@ const SideNav = () => {
   }, [showModal]);
 
   const confirmLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     window.location.href = "/signin";
   };
@@ -41,24 +44,24 @@ const SideNav = () => {
 
   const navLinks = [
     {
-      to: "/dashboard",
+      to: "/admin",
       icon: <RiDashboardHorizontalFill className={iconSize} />,
-      label: "Home",
+      label: "Dashboard",
     },
     {
-      to: "/dashboard/search",
-      icon: <IoIosSearch className={iconSize} />,
-      label: "Search",
+      to: "/admin/catalog",
+      icon: <FaCompass className={iconSize} />,
+      label: "Catalog",
     },
     {
-      to: "/dashboard/shelf",
-      icon: <RiBookShelfFill className={iconSize} />,
-      label: "My Shelf",
+      to: "/admin/books",
+      icon: <IoBookSharp className={iconSize} />,
+      label: "Books",
     },
     {
-      to: "/dashboard/todo",
-      icon: <LuListTodo className={iconSize} />,
-      label: "Todo",
+      to: "/admin/user",
+      icon: <FaUsers className={iconSize} />,
+      label: "User",
     },
   ];
 
@@ -102,7 +105,7 @@ const SideNav = () => {
       </nav>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-sm">
+        <div className="h-screen fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-sm">
           {/* Modal Content */}
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Confirm Logout</h2>

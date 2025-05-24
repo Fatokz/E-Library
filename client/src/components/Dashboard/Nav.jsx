@@ -7,7 +7,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { HiMenu, HiX } from "react-icons/hi";
 import profile from "../../assets/images/ambassador.jpg";
 
-// Clock + Date Component (unchanged)
+// Clock + Date Component
 const ClockDateBadge = () => {
   const [time, setTime] = useState(new Date());
 
@@ -33,7 +33,7 @@ const ClockDateBadge = () => {
       .replace(/ /g, "-");
 
   return (
-    <div className="flex items-center gap-3 shadow-sm px-3 h-10 rounded-full border border-primary text-black text-xs whitespace-nowrap">
+    <div className="flex items-center gap-3 bg-white shadow-sm px-3 h-10 rounded-full border border-primary text-black text-xs whitespace-nowrap">
       <div className="flex items-center gap-1">
         <FaRegClock className="text-primary" />
         <span className="text-[12px]">{formatTime(time)}</span>
@@ -53,10 +53,8 @@ const Nav = () => {
 
   const toggleMenu = () => setMenuOpen((open) => !open);
 
-  // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event) {
-      // If click is NOT inside menu or hamburger button, close menu
       if (
         menuOpen &&
         menuRef.current &&
@@ -73,12 +71,12 @@ const Nav = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="w-full bg-white shadow-sm px-4 py-2 flex items-center justify-between flex-wrap relative z-50">
-      {/* LEFT: Search & Language on md+ */}
+    <nav className="w-full   px-4 py-2 flex items-center justify-between flex-wrap relative z-50">
+      {/* LEFT SIDE (md+) */}
       <div className="hidden md:flex items-center gap-3 flex-1 min-w-0">
         {/* Search */}
         <div className="flex items-center h-10 rounded-full border border-primary px-2 w-full max-w-xs bg-white shadow-sm">
-          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-xs font-medium cursor-pointer">
+          <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white text-xs font-medium cursor-pointer">
             <p>All</p>
             <MdArrowDropDown className="text-base" />
           </div>
@@ -94,19 +92,19 @@ const Nav = () => {
           </div>
         </div>
 
-        {/* Language */}
-        <div className="flex items-center gap-2 h-10 px-3 rounded-full border border-primary text-black cursor-pointer text-xs shadow-sm">
+        {/* Language Selector */}
+        <div className="flex items-center gap-2 h-10 px-3 rounded-full bg-white border border-primary text-black cursor-pointer text-xs shadow-sm">
           <FaLanguage className="text-primary" />
           <p>Lang</p>
           <MdArrowDropDown className="text-base" />
         </div>
       </div>
 
-      {/* RIGHT: Clock, Hamburger */}
+      {/* RIGHT SIDE */}
       <div className="flex items-center gap-4 flex-shrink-0 w-full md:w-auto">
         <ClockDateBadge />
 
-        {/* Hamburger: aligned far right on mobile */}
+        {/* Hamburger Menu (mobile) */}
         <button
           ref={buttonRef}
           onClick={toggleMenu}
@@ -116,7 +114,7 @@ const Nav = () => {
           {menuOpen ? <HiX /> : <HiMenu />}
         </button>
 
-        {/* Profile on md+ only */}
+        {/* Profile Info (desktop) */}
         <div className="hidden md:flex h-10 rounded-full border border-primary w-36 shadow-sm items-center gap-2 px-2 cursor-pointer text-xs ml-4">
           <img
             src={profile}
@@ -128,14 +126,13 @@ const Nav = () => {
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* MOBILE DROPDOWN */}
       {menuOpen && (
         <div
           ref={menuRef}
-          className="absolute top-full left-0 right-0 mt-1 flex flex-col gap-3 md:hidden z-50 bg-white shadow-lg border border-primary rounded-md p-4"
-          style={{ minWidth: "100%" }}
+          className="absolute top-full left-0 right-0 mt-1 flex flex-col gap-3 md:hidden bg-white shadow-lg border border-primary rounded-md p-4 z-40"
         >
-          {/* Search */}
+          {/* Mobile Search */}
           <div className="flex items-center h-10 rounded-full border border-primary px-2 bg-white shadow-sm w-full">
             <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-xs font-medium cursor-pointer">
               <p>All</p>
@@ -153,15 +150,15 @@ const Nav = () => {
             </div>
           </div>
 
-          {/* Language */}
+          {/* Mobile Language */}
           <div className="flex items-center gap-2 h-10 px-3 rounded-full border border-primary text-black cursor-pointer text-xs shadow-sm">
             <FaLanguage className="text-primary" />
             <p>Lang</p>
             <MdArrowDropDown className="text-base" />
           </div>
 
-          {/* Profile inside dropdown */}
-          <div className="flex items-center h-10 rounded-full border border-primary w-full shadow-sm gap-2 px-3 cursor-pointer text-xs">
+          {/* Mobile Profile */}
+          <div className="flex items-center h-10 rounded-full bg-white border border-primary w-full shadow-sm gap-2 px-3 cursor-pointer text-xs">
             <img
               src={profile}
               alt="profile"

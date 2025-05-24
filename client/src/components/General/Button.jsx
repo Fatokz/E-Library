@@ -1,9 +1,10 @@
 import React from "react";
 
-const Button = ({children, type, onClick}) => {
+const Button = ({children, disabled, type, onClick}) => {
   return (
     <>
       <button
+      disabled={disabled}
         className="h-10 w-full bg-primary p-2 text-[13px] rounded-lg cursor-pointer"
         type={type}
         onClick={onClick}

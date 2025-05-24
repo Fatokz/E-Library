@@ -12,6 +12,13 @@ import Search from "../pages/User/Search";
 import Shelf from "../pages/User/Shelf";
 import TodoList from "../pages/User/TodoList";
 
+// Admin routes
+import SuperDashboard from "../pages/Admin/Dashboard";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import Catalog from "../pages/Admin/Catalog";
+import Books from "../pages/Admin/Books";
+import User from "../pages/Admin/User";
+
 const RoutesPage = () => {
   return (
     <Router>
@@ -24,12 +31,20 @@ const RoutesPage = () => {
         <Route path="/signin" element={<Signin />} />
         <Route path="/verify" element={<VerifyUser />} />
 
-        {/* Dashboard layout with nested routes */}
+        {/* Dashboard layout for user with nested routes */}
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<Home />} /> {/* /dashboard */}
           <Route path="search" element={<Search />} />
           <Route path="shelf" element={<Shelf />} />
           <Route path="todo" element={<TodoList />} />
+        </Route>
+
+        {/* Dashboard layout for user with nested routes */}
+        <Route path="/admin" element={<SuperDashboard />}>
+          <Route index element={<AdminDashboard />} /> {/* /dashboard */}
+          <Route path="catalog" element={<Catalog />} />
+          <Route path="books" element={<Books />} />
+          <Route path="user" element={<User />} />
         </Route>
       </Routes>
     </Router>

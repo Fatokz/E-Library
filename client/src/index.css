@@ -24,8 +24,11 @@
     scrollbar-width: none;
 }
 
+
+
 @layer base {
     body {
         font-family: "Sansation", sans-serif;
+        overflow-x: hidden;
     }
 }

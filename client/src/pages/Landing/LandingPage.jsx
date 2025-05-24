@@ -44,7 +44,7 @@ const LandingPage = () => {
     };
   }, []);
 
-  const goToRegister = () => navigate("/onboard");
+  const goToRegister = () => navigate("/signup");
 
   const goToSignIn = () => navigate("/signin");
 

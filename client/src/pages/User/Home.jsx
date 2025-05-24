@@ -7,17 +7,18 @@ const Home = () => {
 
   useEffect(() => {
     const getGreeting = () => {
-      const now = new Date().toLocaleString("en-US", {
+      const hour = new Date().toLocaleString("en-US", {
         timeZone: "Africa/Lagos",
-        hour: "numeric",
+        hour: "2-digit",
         hour12: false,
       });
 
-      const hour = parseInt(now, 10);
+      const hourInt = parseInt(hour, 10);
 
-      if (hour >= 5 && hour < 12) return "Good morning";
-      if (hour >= 12 && hour < 17) return "Good afternoon";
-      return "Good evening";
+      if (hourInt >= 5 && hourInt < 12) return "Good morning";
+      if (hourInt >= 12 && hourInt < 17) return "Good afternoon";
+      if (hourInt >= 17 && hourInt < 24) return "Good evening";
+      return "Good morning"; // 0-4 AM
     };
 
     setGreeting(getGreeting());
@@ -26,18 +27,18 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="w-full h-fit flex flex-col gap-5 overflow-x-hidden px-4">
+    <div className="w-[100%] max-w-7xl mx-auto  h-[85vh]  flex  flex-col gap-6 overflow-x-hidden px-4 py-6 hide-scrollbar">
       {/* Top Section */}
       <div className="flex flex-col lg:flex-row gap-4 w-full">
         {/* Quote Box */}
         <div className="h-40 w-full lg:w-1/2 text-white rounded-lg p-4 bg-gradient-to-r from-[#833AB4] to-[#EB5231]">
-          <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-medium">Today's Quote</h3>
+          <div className="flex flex-col gap-3 h-full justify-center">
+            <h3 className="text-lg font-semibold">Today's Quote</h3>
             <p className="text-sm">
               "There's more treasure in books than in a pirate's loot on
               Treasure Land."
             </p>
-            <p className="ml-auto">- Walt Disney</p>
+            <p className="ml-auto text-sm">- Walt Disney</p>
           </div>
         </div>
 
@@ -48,18 +49,18 @@ const Home = () => {
               New Arrivals
             </p>
           </div>
-          <div className="flex items-center gap-5 px-3 overflow-x-scroll w-full  scrollbar-hide">
+          <div className="flex items-center gap-4 px-3 overflow-x-auto w-full scrollbar-hide">
             {Array(5)
               .fill(null)
               .map((_, i) => (
                 <div
                   key={i}
-                  className="h-36 min-w-[120px] rounded-lg flex items-center"
+                  className="h-36 min-w-[100px] md:min-w-[120px] rounded-lg flex items-center flex-shrink-0"
                 >
                   <img
                     src={cover}
-                    alt="bookcover"
-                    className="h-full w-full rounded-lg "
+                    alt={`New Arrival ${i + 1}`}
+                    className="h-full w-full object-cover rounded-lg"
                   />
                 </div>
               ))}
@@ -69,28 +70,59 @@ const Home = () => {
 
       {/* Greeting and Recommendations */}
       <div className="flex flex-col gap-3">
-        <p className="text-lg md:text-2xl">{greeting}</p>
-        <p className="font-light text-sm">Recommended for You</p>
+        <p className="text-lg md:text-2xl font-medium">{greeting}</p>
+        <p className="font-medium text-sm text-gray-700">Recommended for You</p>
 
-        <div className="h-60 w-full gap-3 border border-gray-400 flex items-center overflow-x-scroll scrollbar-hide p-3 rounded-md ">
+        <div className="h-62 w-full gap-4  flex items-center overflow-x-auto scrollbar-hide rounded-md snap-x snap-mandatory">
           {Array(6)
             .fill(null)
             .map((_, i) => (
               <div
                 key={i}
-                className="min-w-[8.5rem] rounded-lg p-2 bg-white shadow-md flex-shrink-0 snap-start"
+                className="min-w-[8rem] md:min-w-[8.5rem] rounded-lg p-2 bg-white shadow-md flex-shrink-0 snap-start"
               >
-                <div className="w-full h-30">
+                <div className="w-full h-32 mb-2">
                   <img
                     src={learn}
-                    alt="bookcover"
-                    className="w-full h-full object-cover"
+                    alt={`Recommendation ${i + 1}`}
+                    className="w-full h-full object-cover rounded"
                   />
                 </div>
-                <div className="p-2 text-[11px] font-medium">
+                <div className="text-xs font-medium space-y-1">
                   <p className="truncate">Learn UX: Design Great</p>
-                  <p>Stev Krug, 2000</p>
-                  <p>
+                  <p className="text-gray-600">Stev Krug, 2000</p>
+                  <p className="text-yellow-500">
+                    4.5 <span className="text-gray-400">/5</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* Greeting and Recommendations */}
+      <div className="flex flex-col gap-3">
+        <p className="font-medium text-sm text-gray-700">Recent Readings</p>
+
+        <div className="h-62 w-full gap-4  flex items-center overflow-x-auto scrollbar-hide rounded-md snap-x snap-mandatory">
+          {Array(6)
+            .fill(null)
+            .map((_, i) => (
+              <div
+                key={i}
+                className="min-w-[8rem] md:min-w-[8.5rem] rounded-lg p-2 bg-white shadow-md flex-shrink-0 snap-start"
+              >
+                <div className="w-full h-32 mb-2">
+                  <img
+                    src={learn}
+                    alt={`Recommendation ${i + 1}`}
+                    className="w-full h-full object-cover rounded"
+                  />
+                </div>
+                <div className="text-xs font-medium space-y-1">
+                  <p className="truncate">Learn UX: Design Great</p>
+                  <p className="text-gray-600">Stev Krug, 2000</p>
+                  <p className="text-yellow-500">
                     4.5 <span className="text-gray-400">/5</span>
                   </p>
                 </div>
