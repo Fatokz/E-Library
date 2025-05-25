@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, addTodo);
 router.get("/", isAuthenticated, getTodos);
-router.put("/:id", isAuthenticated, updateTodo);
+router.patch("/:id", isAuthenticated, updateTodo);
 router.delete("/:id", isAuthenticated, deleteTodo);
 
 export default router;

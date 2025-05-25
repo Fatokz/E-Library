@@ -48,10 +48,10 @@ export const updateTodo = async (
 ) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const { completed, title, targetCompletedDate } = req.body;
     const todo = await Todo.findOneAndUpdate(
       { _id: id, user: (req as any).user._id },
-      updateData,
+      {completed: "true", title, targetCompletedDate },
       { new: true }
     );
     if (!todo) return next(new ValidationError("Todo not found"));
@@ -60,6 +60,26 @@ export const updateTodo = async (
     next(error);
   }
 };
+// // complete a todo
+// export const completeTodo = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { id } = req.params;
+//     const updateData = req.body;
+//     const todo = await Todo.findOneAndUpdate(
+//       { _id: id, user: (req as any).user._id },
+//       updateData,
+//       { new: true }
+//     );
+//     if (!todo) return next(new ValidationError("Todo not found"));
+//     res.json({ message: "Todo updated", todo });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 // Delete a todo
 export const deleteTodo = async (

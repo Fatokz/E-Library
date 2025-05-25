@@ -58,12 +58,11 @@ const Signin = () => {
         toast.success("Sign In successful!");
         resetForm();
       } catch (error) {
-        console.error("Error response:", error?.response?.data);
+        console.error("Error response:", error.response.data);
         const errorMessage =
           error?.response?.data?.message ||
           Object.values(error?.response?.data || {})?.[0]?.[0] ||
           "Login failed.";
-
         toast.error(errorMessage);
       } finally {
         setLoading(false);

@@ -16,7 +16,13 @@ router.post(
   isAuthenticated,
   isAdmin,
   upload.single("image"),
-  addBook
+  (req, res, next) => {
+    // console.log("BODY:", req.body);
+    console.log("FILE:", req?.file?.path);
+    next();
+  },
+  addBook,
+
 );
 router.get("/users", isAuthenticated, isAdmin, getAllUsers);
 router.delete("/users/:id", isAuthenticated, isAdmin, deleteUser);

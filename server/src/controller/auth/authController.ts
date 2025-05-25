@@ -178,3 +178,50 @@ export const verifyAdmin = async (
     next(error);
   }
 };
+
+export const refreshAccessToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get refresh token from cookie or body
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+    if (!refreshToken) {
+       res.status(401).json({ message: "No refresh token provided" });
+       return
+    }
+
+    // Verify refresh token
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET as string,
+      (err: any, decoded: any) => {
+        if (err) {
+           res.status(403).json({ message: "Invalid refresh token" });
+           return 
+        }
+
+        // Issue new access token
+        const accessToken = jwt.sign(
+          { id: decoded.id, role: decoded.role },
+          process.env.ACCESS_TOKEN_SECRET as string,
+          { expiresIn: "15m" }
+        );
+
+        // Optionally, issue a new refresh token here if you want to rotate
+        // const newRefreshToken = jwt.sign(
+        //   { id: decoded.id, role: decoded.role },
+        //   process.env.REFRESH_TOKEN_SECRET as string,
+        //   { expiresIn: "7d" }
+        // );
+        // setCookie(res, "refreshToken", newRefreshToken);
+
+        setCookie(res, "accessToken", accessToken);
+       res.status(200).json({ accessToken });
+      }
+    );
+  } catch (error) {
+    next(error);
+  }
+};

@@ -5,6 +5,7 @@ import {
   login,
   adminRegistration,
   verifyAdmin,
+  refreshAccessToken,
 } from "../controller/auth/authController";
 import { isAdmin } from "../middleware/isAdmin";
 import { addBook } from "../controller/admin/adminController";
@@ -21,5 +22,6 @@ router.post("/login", login);
 // Admin routes
 router.post("/admin-register", isAdmin, adminRegistration);
 router.post("/verify-admin", verifyAdmin);
+router.post("/refresh-token", refreshAccessToken);
 
 export default router;

@@ -25,7 +25,6 @@ export const addBook = async (
     } = req.body;
 
     const image = req.file?.path;
-
     // Business rules
     if (availability === "ebook" && status === "borrowable") {
       return next(new ValidationError("Ebooks cannot be borrowable"));
