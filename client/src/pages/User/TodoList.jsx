@@ -9,11 +9,11 @@ const TodoList = () => {
   const [date, setDate] = useState("");
   const [todos, setTodos] = useState([]);
 
-  // Fetch todos from backend 
+  // Fetch todos from backend
   useEffect(() => {
     async function fetchTodos() {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/todos`); 
+        const res = await fetch(`${BACKEND_URL}/api/todos`);
         if (res.ok) {
           const data = await res.json();
           setTodos(data);
@@ -26,7 +26,8 @@ const TodoList = () => {
   }, []);
 
   const addTask = async () => {
-    if (!task.trim() || !date) return toast.warning("Please enter task and due date.");
+    if (!task.trim() || !date)
+      return toast.warning("Please enter task and due date.");
 
     const newTodo = { text: task.trim(), dueDate: date, completed: false };
 
@@ -85,7 +86,7 @@ const TodoList = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 rounded-xl shadow-lg bg-white">
+    <div className="max-w-lg mx-auto mt-10 p-6 rounded-xl shadow-lg bg-white">
       <h2 className="text-2xl font-bold text-center mb-6">My Todo List</h2>
 
       {/* Input Area */}
@@ -106,7 +107,7 @@ const TodoList = () => {
         />
         <button
           onClick={addTask}
-          className="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg text-sm flex items-center justify-center w-full sm:w-auto"
+          className="bg-primary cursor-pointer hover:bg-primary/90 text-white px-4 py-3 rounded-lg text-sm flex items-center justify-center w-full sm:w-auto"
           title="Add Task"
         >
           <FaPlus />
@@ -126,8 +127,8 @@ const TodoList = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => toggleComplete(todo.id)}
-                className="text-primary text-lg flex-shrink-0"
-                aria-label="Toggle Complete"
+                className="text-primary cursor-pointer text-lg flex-shrink-0"
+                aria-label="Toggle Complete" 
               >
                 {todo.completed ? (
                   <FaCheckCircle className="text-green-500" />
@@ -154,7 +155,7 @@ const TodoList = () => {
             </div>
             <button
               onClick={() => deleteTask(todo.id)}
-              className="text-red-500 hover:text-red-700 mt-2 sm:mt-0 flex-shrink-0"
+              className="text-red-500 cursor-pointer hover:text-red-700 mt-2 sm:mt-0 flex-shrink-0"
               aria-label="Delete Task"
             >
               <FaTrash />
