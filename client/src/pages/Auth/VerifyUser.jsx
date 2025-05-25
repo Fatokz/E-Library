@@ -73,7 +73,7 @@ const VerifyUser = () => {
           <Button
             onClick={handleVerify}
             disabled={otp.join("").length !== 4 || loading}
-            className="relative text-white w-full"
+            className="relative text-white w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? <Loader /> : "Verify"}
           </Button>

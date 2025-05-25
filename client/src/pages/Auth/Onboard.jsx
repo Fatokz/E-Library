@@ -157,7 +157,7 @@ const Onboard = () => {
                 !formik.dirty ||
                 formik.isSubmitting
               }
-              className="relative text-white w-full"
+              className="relative text-white w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? <Loader /> : "Register"}
             </Button>
