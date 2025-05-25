@@ -1,5 +1,10 @@
 import express from "express";
-import { addBook } from "../controller/admin/adminController";
+import {
+  addBook,
+  getAllUsers,
+  deleteUser,
+  updateUser,
+} from "../controller/admin/adminController";
 import { isAdmin } from "../middleware/isAdmin";
 import upload from "../middleware/multer.middleware";
 import { isAuthenticated } from "../middleware/isAuthenticated";
@@ -13,5 +18,8 @@ router.post(
   upload.single("image"),
   addBook
 );
+router.get("/users", isAuthenticated, isAdmin, getAllUsers);
+router.delete("/users/:id", isAuthenticated, isAdmin, deleteUser);
+router.put("/users/:id", isAuthenticated, isAdmin, updateUser);
 
 export default router;

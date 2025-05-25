@@ -6,10 +6,13 @@ import { RiDashboardHorizontalFill, RiBookShelfFill } from "react-icons/ri";
 import { IoIosSearch } from "react-icons/io";
 import { BiLogOut } from "react-icons/bi";
 import { LuListTodo } from "react-icons/lu";
-
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/authSlice";
+import { useNavigate } from "react-router-dom";
 const SideNav = () => {
   const [showModal, setShowModal] = useState(false);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     if (showModal) {
       document.body.style.overflow = "hidden";
@@ -19,9 +22,8 @@ const SideNav = () => {
   }, [showModal]);
 
   const confirmLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
-    window.location.href = "/signin";
+    dispatch(logout());
+    navigate("/signin");
   };
 
   const handleLogout = (e) => {
