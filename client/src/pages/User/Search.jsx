@@ -175,7 +175,7 @@ const Search = () => {
                   <p>{book.rating}</p>
                 </div>
 
-                <div className="truncate flex flex-col justify-center">
+                <div className="truncate text-start flex flex-col justify-center">
                   <h1 className="text-sm ml-8 font-semibold truncate">
                     {book.categoryTitle || book.category}
                   </h1>
@@ -220,7 +220,7 @@ const Search = () => {
                 </div>
 
                 <div className="flex justify-center">
-                  <button className="bg-green-600 text-white px-2 py-1 cursor-pointer text-xs font-light rounded-md">
+                  <button className="bg-green-600  text-white px-2 py-1 cursor-not-allowed text-xs font-light rounded-md">
                     {book.status}
                   </button>
                 </div>
@@ -239,7 +239,7 @@ const Search = () => {
                   </button>
 
                   <button
-                    className="bg-blue-600 text-white px-3 py-1 rounded-md text-xs hover:bg-blue-700"
+                    className="bg-blue-600 cursor-pointer text-white px-3 py-1 rounded-md text-xs hover:bg-blue-700"
                     onClick={() => openPreview(book)}
                   >
                     Preview
