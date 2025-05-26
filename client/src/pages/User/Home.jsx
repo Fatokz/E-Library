@@ -1,9 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateBorrow } from "../../store/borrowSlice";
+import { toast } from "sonner";
 import cover from "../../assets/images/bookcover2.png";
+import js from "../../assets/images/js.png";
+import harry from "../../assets/images/harry.png";
+import richdad from "../../assets/images/richdad.png";
+import react from "../../assets/images/react.png";
 import learn from "../../assets/images/learn.png";
+import axios from "../../utils/axios";
 
 const Home = () => {
   const [greeting, setGreeting] = useState("");
+  const [books, setBooks] = useState([]);
+  const user = useSelector((state) => state.auth.user);
+  const userBorrows = useSelector((state) => state.borrows.all);
+  const myBorrows = useMemo(
+    () =>
+      userBorrows.filter((b) => {
+        const borrowObj = b.borrow ? b.borrow : b;
+        // Check both returned and status
+        const isReturned =
+          b.returned ?? borrowObj.returned ?? borrowObj.status === "returned";
+        return (b.user === user?.id || b.user?._id === user?.id) && !isReturned;
+      }),
+    [userBorrows, user]
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getGreeting = () => {
@@ -12,9 +35,7 @@ const Home = () => {
         hour: "2-digit",
         hour12: false,
       });
-
       const hourInt = parseInt(hour, 10);
-
       if (hourInt >= 5 && hourInt < 12) return "Good morning";
       if (hourInt >= 12 && hourInt < 17) return "Good afternoon";
       if (hourInt >= 17 && hourInt < 24) return "Good evening";
@@ -25,6 +46,31 @@ const Home = () => {
     const interval = setInterval(() => setGreeting(getGreeting()), 3600000);
     return () => clearInterval(interval);
   }, []);
+
+  // Fetch books from backend
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await axios.get("/books");
+        setBooks(res.data);
+      } catch (err) {
+        setBooks([]);
+      }
+    };
+    fetchBooks();
+  }, []);
+
+  const handleReturn = async (borrowId) => {
+    try {
+      const res = await axios.post(`/borrows/return/${borrowId}`);
+      dispatch(updateBorrow(res.data)); // Update Redux
+      toast.success("Book returned!");
+    } catch (err) {
+      toast.error("Failed to return book.");
+    }
+  };
+
+  console.log("myBorrows", myBorrows);
 
   return (
     <div className="w-[100%] max-w-7xl mx-auto  h-[85vh]  flex  flex-col gap-6 overflow-x-hidden px-4 py-6 hide-scrollbar">
@@ -42,7 +88,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* New Arrivals */}
+        {/* New Arrivals (hardcoded) */}
         <div className="flex h-40 w-full lg:w-1/2 rounded-lg border border-primary overflow-hidden">
           <div className="flex items-center justify-center h-full w-14 bg-gradient-to-r from-[#833AB4] to-[#EB5231] text-white font-semibold">
             <p className="transform -rotate-90 whitespace-nowrap">
@@ -50,85 +96,123 @@ const Home = () => {
             </p>
           </div>
           <div className="flex items-center gap-4 px-3 overflow-x-auto w-full scrollbar-hide">
-            {Array(5)
-              .fill(null)
-              .map((_, i) => (
-                <div
-                  key={i}
-                  className="h-36 min-w-[100px] md:min-w-[120px] rounded-lg flex items-center flex-shrink-0"
-                >
-                  <img
-                    src={cover}
-                    alt={`New Arrival ${i + 1}`}
-                    className="h-full w-full object-cover rounded-lg"
-                  />
-                </div>
-              ))}
+            {/* Hardcoded books */}
+            <div className="h-36 min-w-[100px] md:min-w-[120px] rounded-lg flex items-center flex-shrink-0">
+              <img
+                src={cover}
+                alt="Book 1"
+                className="h-full w-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="h-36 min-w-[100px] md:min-w-[120px] rounded-lg flex items-center flex-shrink-0">
+              <img
+                src={js}
+                alt="Book 2"
+                className="h-full w-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="h-36 min-w-[100px] md:min-w-[120px] rounded-lg flex items-center flex-shrink-0">
+              <img
+                src={react}
+                alt="Book 3"
+                className="h-full w-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="h-36 min-w-[100px] md:min-w-[120px] rounded-lg flex items-center flex-shrink-0">
+              <img
+                src={richdad}
+                alt="Book 3"
+                className="h-full w-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="h-36 min-w-[100px] md:min-w-[120px] rounded-lg flex items-center flex-shrink-0">
+              <img
+                src={harry}
+                alt="Book 3"
+                className="h-full w-full object-cover rounded-lg"
+              />
+            </div>
+            {/* Add more hardcoded items as needed */}
           </div>
         </div>
       </div>
 
-      {/* Greeting and Recommendations */}
+      {/* Greeting */}
       <div className="flex flex-col gap-3">
         <p className="text-lg md:text-2xl font-medium">{greeting}</p>
-        <p className="font-medium text-sm text-gray-700">Recommended for You</p>
+        <p className="font-medium text-sm text-gray-700">All Books</p>
 
-        <div className="h-62 w-full gap-4  flex items-center overflow-x-auto scrollbar-hide rounded-md snap-x snap-mandatory">
-          {Array(6)
-            .fill(null)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="min-w-[8rem] md:min-w-[8.5rem] rounded-lg p-2 bg-white shadow-md flex-shrink-0 snap-start"
-              >
-                <div className="w-full h-32 mb-2">
-                  <img
-                    src={learn}
-                    alt={`Recommendation ${i + 1}`}
-                    className="w-full h-full object-cover rounded"
-                  />
-                </div>
-                <div className="text-xs font-medium space-y-1">
-                  <p className="truncate">Learn UX: Design Great</p>
-                  <p className="text-gray-600">Stev Krug, 2000</p>
-                  <p className="text-yellow-500">
-                    4.5 <span className="text-gray-400">/5</span>
-                  </p>
-                </div>
+        {/* Map ALL books here */}
+        <div className="flex flex-wrap gap-4">
+          {books.map((book, i) => (
+            <div
+              key={book._id || i}
+              className="w-[150px] md:w-[180px] rounded-lg p-2 bg-white shadow-md flex-shrink-0"
+            >
+              <div className="w-full h-32 mb-2">
+                <img
+                  src={book.image || learn}
+                  alt={book.title}
+                  className="w-full h-full object-fit rounded"
+                />
               </div>
-            ))}
-        </div>
-      </div>
-
-      {/* Greeting and Recommendations */}
-      <div className="flex flex-col gap-3">
-        <p className="font-medium text-sm text-gray-700">Recent Readings</p>
-
-        <div className="h-62 w-full gap-4  flex items-center overflow-x-auto scrollbar-hide rounded-md snap-x snap-mandatory">
-          {Array(6)
-            .fill(null)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="min-w-[8rem] md:min-w-[8.5rem] rounded-lg p-2 bg-white shadow-md flex-shrink-0 snap-start"
-              >
-                <div className="w-full h-32 mb-2">
-                  <img
-                    src={learn}
-                    alt={`Recommendation ${i + 1}`}
-                    className="w-full h-full object-cover rounded"
-                  />
-                </div>
-                <div className="text-xs font-medium space-y-1">
-                  <p className="truncate">Learn UX: Design Great</p>
-                  <p className="text-gray-600">Stev Krug, 2000</p>
-                  <p className="text-yellow-500">
-                    4.5 <span className="text-gray-400">/5</span>
-                  </p>
-                </div>
+              <div className="text-xs font-medium space-y-1">
+                <p className="truncate">{book.title}</p>
+                <p className="text-gray-600">{book.author}</p>
+                <p className="text-yellow-500">
+                  {book.rating || "4.5"}{" "}
+                  <span className="text-gray-400">/5</span>
+                </p>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
+
+        {/* User's Borrowed Books */}
+        {myBorrows.length > 0 && (
+          <div className="mt-8">
+            <p className="font-medium text-sm text-gray-700 mb-2">
+              Books You Have Borrowed
+            </p>
+            <div className="flex flex-wrap gap-4">
+              {[
+                ...new Map(
+                  myBorrows.map((borrow) => {
+                    const borrowObj = borrow.borrow ? borrow.borrow : borrow;
+                    return [borrowObj._id, borrowObj];
+                  })
+                ).values(),
+              ].map((borrowObj) => (
+                <div
+                  key={borrowObj._id}
+                  className="w-[150px] md:w-[180px] rounded-lg p-2 bg-blue-50 shadow-md flex-shrink-0"
+                >
+                  <div className="w-full h-32 mb-2">
+                    <img
+                      src={borrowObj.book?.image || learn}
+                      alt={borrowObj.book?.title}
+                      className="w-full h-full object-fit rounded"
+                    />
+                  </div>
+                  <div className="text-xs font-medium space-y-1">
+                    <p className="truncate">{borrowObj.book?.title}</p>
+                    <p className="text-gray-600">{borrowObj.book?.author}</p>
+                    <p className="text-yellow-500">
+                      {borrowObj.book?.rating || "4.5"}{" "}
+                      <span className="text-gray-400">/5</span>
+                    </p>
+                    <button
+                      className="bg-orange-600 text-white px-2 py-1 rounded text-xs mt-2 hover:bg-orange-700"
+                      onClick={() => handleReturn(borrowObj._id)}
+                    >
+                      Return
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

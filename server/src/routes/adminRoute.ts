@@ -6,23 +6,18 @@ import {
   updateUser,
 } from "../controller/admin/adminController";
 import { isAdmin } from "../middleware/isAdmin";
-import upload from "../middleware/multer.middleware";
 import { isAuthenticated } from "../middleware/isAuthenticated";
+import upload from "../middleware/multer.middleware";
+
 
 const router = express.Router();
 
 router.post(
   "/add-book",
+  upload.single("image"),
   isAuthenticated,
   isAdmin,
-  upload.single("image"),
-  (req, res, next) => {
-    // console.log("BODY:", req.body);
-    console.log("FILE:", req?.file?.path);
-    next();
-  },
   addBook,
-
 );
 router.get("/users", isAuthenticated, isAdmin, getAllUsers);
 router.delete("/users/:id", isAuthenticated, isAdmin, deleteUser);

@@ -42,7 +42,14 @@ instance.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem("token");
     if (token) config.headers["Authorization"] = `Bearer ${token}`;
-    config.headers["Content-Type"] = "application/json";
+    // Only set application/json if not FormData
+    if (
+      config.data &&
+      typeof config.data === "object" &&
+      !(config.data instanceof FormData)
+    ) {
+      config.headers["Content-Type"] = "application/json";
+    }
     return config;
   },
   (err: AxiosError) => {

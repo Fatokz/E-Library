@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "../../utils/axios";
 import { toast } from "sonner";
+import Loader from "../../components/General/Loader";
+import { useDispatch } from "react-redux";
+import { setBooks } from "../../store/bookSlice";
 
 const initialState = {
   title: "",
@@ -19,13 +22,14 @@ const initialState = {
 };
 
 const Books = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialState);
   const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     if (type === "file") {
-      console.log(files[0]);
       setFormData({
         ...formData,
         image: files[0],
@@ -44,35 +48,70 @@ const Books = () => {
     }
   };
 
-  // Add this helper to check the invalid combination
+  // Helper to check if all required fields are filled
+  const isFormValid = () => {
+    const requiredFields = [
+      "title",
+      "description",
+      "author",
+      "category",
+      "pages",
+      "publishedDate",
+      "availability",
+      "status",
+      "rating",
+      "reviewCount",
+    ];
+    for (let field of requiredFields) {
+      if (
+        !formData[field] ||
+        (typeof formData[field] === "string" && formData[field].trim() === "")
+      ) {
+        return false;
+      }
+    }
+    if (formData.isPaid && (!formData.price || formData.price === "")) {
+      return false;
+    }
+    if (!formData.image) {
+      return false;
+    }
+    // Ebooks cannot be borrowable
+    if (formData.availability === "ebook" && formData.status === "borrowable") {
+      return false;
+    }
+    return true;
+  };
+
   const isEbookBorrowable =
     formData.availability === "ebook" && formData.status === "borrowable";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Frontend validation for business logic
-    if (isEbookBorrowable) {
-      toast.error("Ebooks cannot be borrowable.");
-      return;
-    }
+    setLoading(true);
 
     const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "image" && value) {
-        data.append("image", formData.image);
+        data.append("image", value);
       } else {
         data.append(key, value);
       }
     });
-    console.log(data);
+
     try {
       await axios.post("/admin/add-book", data);
       toast.success("Book added!");
+      // Refetch books and update Redux
+      const res = await axios.get("/books");
+      dispatch(setBooks(res.data));
       setFormData(initialState);
       setImagePreview(null);
+      document.getElementById("book-image-input").value = "";
     } catch (error) {
       toast.error("Failed to add book");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,6 +128,7 @@ const Books = () => {
           Book Image
         </label>
         <input
+          id="book-image-input"
           type="file"
           name="image"
           accept="image/*"
@@ -309,9 +349,12 @@ const Books = () => {
 
       <button
         type="submit"
-        className="w-full py-2 px-4 cursor-pointer bg-primary text-white font-semibold rounded-lg hover:bg-[#EB5232] transition"
+        className={`w-full py-2 px-4 cursor-pointer bg-primary text-white font-semibold rounded-lg hover:bg-[#EB5232] transition flex items-center justify-center ${
+          !isFormValid() || loading ? "opacity-50" : "opacity-100"
+        }`}
+        disabled={!isFormValid() || loading}
       >
-        Submit
+        {loading ? <Loader /> : "Add Book"}
       </button>
     </form>
   );

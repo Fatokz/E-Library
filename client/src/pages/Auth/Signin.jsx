@@ -42,12 +42,19 @@ const Signin = () => {
         const response = await axios.post("/auth/login", payload, {
           withCredentials: true,
         });
+
+        // Save token to localStorage for persistence
+        localStorage.setItem("token", response.data.accessToken);
+        if (response.data.refreshToken) {
+          localStorage.setItem("refreshToken", response.data.refreshToken);
+        }
+
         dispatch(
           loginSuccess({
+            user: response.data.user, // user object from backend
             accessToken: response.data.accessToken,
             refreshToken: response.data.refreshToken,
             role: response.data.role,
-            user: response.data.user || null,
           })
         );
         if (response.data.role === "admin") {
@@ -58,7 +65,7 @@ const Signin = () => {
         toast.success("Sign In successful!");
         resetForm();
       } catch (error) {
-        console.error("Error response:", error.response.data);
+        console.error("Error response:", error.response?.data);
         const errorMessage =
           error?.response?.data?.message ||
           Object.values(error?.response?.data || {})?.[0]?.[0] ||

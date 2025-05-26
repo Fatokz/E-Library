@@ -5,12 +5,20 @@ const getInitialAuthState = () => {
   const token = localStorage.getItem("token");
   let role = null;
   let isAuthenticated = false;
+  let user = null;
   if (token) {
     try {
       const decoded = jwtDecode(token);
       if (decoded.exp * 1000 > Date.now()) {
         role = decoded.role;
         isAuthenticated = true;
+        // Try to get user info from token (adjust these fields as per your backend)
+        user = {
+          name: decoded.name || decoded.username || decoded.email || "User",
+          email: decoded.email,
+          id: decoded.id,
+          // add more fields if your token has them
+        };
       } else {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
@@ -22,7 +30,7 @@ const getInitialAuthState = () => {
   }
   return {
     isAuthenticated,
-    user: null,
+    user,
     role,
     accessToken: token,
     refreshToken: localStorage.getItem("refreshToken") || null,
