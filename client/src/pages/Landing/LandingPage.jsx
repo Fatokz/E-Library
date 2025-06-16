@@ -213,7 +213,7 @@ const LandingPage = () => {
         <div className="h-96 w-full flex items-center md:flex md:items-center md:gap-5">
           <div className="md:w-2/3 flex flex-col gap-6  md:flex md:flex-col md:gap-3">
             <h1 className="font-inter font-medium text-darkgray  md:text-6xl text-4xl">
-              Effortless Library Management for{" "}
+              Electronics Library Management for{" "}
               <span className="text-primary">All Institutions</span>
             </h1>
             <p className="text-[12px] text-gray-500 font-medium">
