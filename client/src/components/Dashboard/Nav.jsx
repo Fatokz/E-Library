@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
 import { CiBarcode } from "react-icons/ci";
@@ -207,9 +207,7 @@ const Nav = () => {
             alt="profile"
             className="h-7 w-7 rounded-full object-cover"
           />
-          <p className="font-medium text-black truncate">
-            {userName}
-          </p>
+          <p className="font-medium text-black truncate">{userName}</p>
           <MdArrowDropDown className="text-base text-black" />
         </div>
       </div>
@@ -287,9 +285,7 @@ const Nav = () => {
               alt="profile"
               className="h-7 w-7 rounded-full object-cover"
             />
-            <p className="font-medium text-black truncate">
-              {userName}
-            </p>
+            <p className="font-medium text-black truncate">{userName}</p>
             <MdArrowDropDown className="text-base text-black" />
           </div>
         </div>

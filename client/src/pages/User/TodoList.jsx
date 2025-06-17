@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaPlus, FaTrash, FaCheckCircle, FaRegCircle } from "react-icons/fa";
 import { toast } from "sonner";
 import axios from "../../utils/axios";
@@ -46,7 +46,7 @@ const TodoList = () => {
       setTask("");
       setDate("");
       await fetchTodos();
-      toast.success("Added")
+      toast.success("Added");
     } catch (error) {
       toast.error("Error adding task");
       console.error(error);
@@ -119,7 +119,9 @@ const TodoList = () => {
 
       {/* Loader */}
       {loading && (
-        <div className="text-center text-primary py-2 text-sm italic">Loading...</div>
+        <div className="text-center text-primary py-2 text-sm italic">
+          Loading...
+        </div>
       )}
 
       {/* Task List */}
@@ -170,7 +172,8 @@ const TodoList = () => {
                       todo.completed ? "line-through" : ""
                     }`}
                   >
-                    Due: {new Date(todo.targetCompletedDate).toLocaleDateString()}
+                    Due:{" "}
+                    {new Date(todo.targetCompletedDate).toLocaleDateString()}
                   </p>
                 </div>
               </div>

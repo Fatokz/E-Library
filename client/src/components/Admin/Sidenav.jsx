@@ -1,6 +1,6 @@
 // This component is a sidebar navigation menu for an admin dashboard.
 // It includes links to different sections of the admin panel, such as Dashboard, Catalog, Books, and User.;
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../General/Logo";
 import Logo2 from "../../assets/images/Logo.svg";

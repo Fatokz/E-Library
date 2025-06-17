@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TopWave from "../../components/Auth/Topwave";
 import Logo from "../../components/General/Logo";
 import Inputfield from "../../components/Auth/Inputfield";
@@ -56,6 +56,11 @@ const Signin = () => {
             refreshToken: response.data.refreshToken,
             role: response.data.role,
           })
+        );
+        // Save user name from form input to localStorage
+        localStorage.setItem(
+          "userName",
+          response.data.user?.name || values.email.split("@")[0]
         );
         if (response.data.role === "admin") {
           navigate("/admin");

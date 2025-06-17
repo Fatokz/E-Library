@@ -1,9 +1,5 @@
-import React from 'react'
-
 const User = () => {
-  return (
-    <div>User</div>
-  )
-}
-
-export default User
+  return <div>User</div>;
+};
+// /admin/users
+export default User;

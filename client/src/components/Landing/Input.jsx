@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 const Input = () => {
@@ -98,6 +97,5 @@ const StyledWrapper = styled.div`
     stroke: white;
   }
 `;
-
 
 export default Input;

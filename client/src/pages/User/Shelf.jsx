@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import cover from "../../assets/images/bookcover2.png";

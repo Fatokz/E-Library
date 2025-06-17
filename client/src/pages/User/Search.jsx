@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import cover from "../../assets/images/bookcover2.png";

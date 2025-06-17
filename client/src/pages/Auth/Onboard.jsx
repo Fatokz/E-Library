@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TopWave from "../../components/Auth/Topwave";
 import Logo from "../../components/General/Logo";
 import Inputfield from "../../components/Auth/Inputfield";

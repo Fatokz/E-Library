@@ -1,4 +1,3 @@
-import React from "react";
 import SideNav from "../../components/Dashboard/SideNav";
 import Nav from "../../components/Dashboard/Nav";
 import { Outlet } from "react-router-dom";

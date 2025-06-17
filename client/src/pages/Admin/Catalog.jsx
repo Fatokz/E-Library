@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "../../utils/axios";
 import { setBorrows } from "../../store/borrowSlice";
@@ -11,8 +11,9 @@ const Catalog = () => {
   useEffect(() => {
     const fetchBorrows = async () => {
       try {
-        const res = await axios.get("/borrows"); // Use admin endpoint!
-        dispatch(setBorrows(res.data));
+        const res = await axios.get("/admin/borrowed-books");
+        await dispatch(setBorrows(res.data));
+        console.log("Fetched borrows:", res.data);
       } catch (err) {
         dispatch(setBorrows([]));
       }
@@ -42,7 +43,7 @@ const Catalog = () => {
           </tr>
         </thead>
         <tbody>
-          {borrows.map((borrow, idx) => {
+          {borrows.borrows?.map((borrow, idx) => {
             const borrowObj = borrow.borrow ? borrow.borrow : borrow;
             return (
               <tr key={borrowObj._id || idx} className="border-t">
