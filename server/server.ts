@@ -5,10 +5,10 @@ import authRouter from "./src/routes/authRouter";
 import adminRoute from "./src/routes/adminRoute";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
-import swaggerUi from "swagger-ui-express";
+// import swaggerUi from "swagger-ui-express";
 import { errorHandler } from "./src/utils/errorHandler";
 import connection from "./src/utils/database/connect";
-const swaggerDocumentation = require("./src/swagger-output.json");
+// const swaggerDocumentation = require("./src/swagger-output.json");
 
 import bookRoute from "./src/routes/bookRoute";
 import reviewRoute from "./src/routes/reviewRoute";
@@ -44,10 +44,10 @@ app.use(express.static("public"));
 app.use(cookieParser());
 app.use(errorHandler);
 connection(process.env.MONGO_URI!);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
-app.get("/docs/json", (req, res) => {
-  res.json(swaggerDocumentation);
-});
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
+// app.get("/docs/json", (req, res) => {
+//   res.json(swaggerDocumentation);
+// });
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRoute);
 app.use("/api/books", bookRoute);

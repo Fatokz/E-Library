@@ -10,10 +10,10 @@ const authRouter_1 = __importDefault(require("./src/routes/authRouter"));
 const adminRoute_1 = __importDefault(require("./src/routes/adminRoute"));
 const morgan_1 = __importDefault(require("morgan"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
-const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+// import swaggerUi from "swagger-ui-express";
 const errorHandler_1 = require("./src/utils/errorHandler");
 const connect_1 = __importDefault(require("./src/utils/database/connect"));
-const swaggerDocumentation = require("./src/swagger-output.json");
+// const swaggerDocumentation = require("./src/swagger-output.json");
 const bookRoute_1 = __importDefault(require("./src/routes/bookRoute"));
 const reviewRoute_1 = __importDefault(require("./src/routes/reviewRoute"));
 const commentRoute_1 = __importDefault(require("./src/routes/commentRoute"));
@@ -41,10 +41,10 @@ app.use(express_1.default.static("public"));
 app.use((0, cookie_parser_1.default)());
 app.use(errorHandler_1.errorHandler);
 (0, connect_1.default)(process.env.MONGO_URI);
-app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocumentation));
-app.get("/docs/json", (req, res) => {
-    res.json(swaggerDocumentation);
-});
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocumentation));
+// app.get("/docs/json", (req, res) => {
+//   res.json(swaggerDocumentation);
+// });
 app.use("/api/auth", authRouter_1.default);
 app.use("/api/admin", adminRoute_1.default);
 app.use("/api/books", bookRoute_1.default);
