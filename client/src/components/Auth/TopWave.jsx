@@ -1,4 +1,4 @@
-const TopWave = ({ fillColor = "#EB5231", className = "" }) => {
+const Topwave = ({ fillColor = "#EB5231", className = "" }) => {
   return (
     <div
       className={`absolute top-0 left-0 w-full overflow-hidden leading-[0] ${className}`}
@@ -18,4 +18,4 @@ const TopWave = ({ fillColor = "#EB5231", className = "" }) => {
   );
 };
 
-export default TopWave;
+export default Topwave;
