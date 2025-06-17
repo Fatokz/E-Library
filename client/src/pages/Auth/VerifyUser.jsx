@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TopWave from "../../components/Auth/Topwave";
+import TopWave from "../../components/Auth/BackgroundSVG";
 import Logo from "../../components/General/Logo";
 import Otp from "../../components/Auth/Otp";
 import Button from "../../components/General/Button";
