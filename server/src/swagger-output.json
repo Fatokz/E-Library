@@ -1,276 +1,206 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "BookSync Library & Book Management API",
-    "description": "API documentation for BookSync. After login, use the returned accessToken as a Bearer token in the Authorization header for all protected (user or admin) routes.",
+    "title": "BookSync Auth API",
+    "description": "API documentation for BookSync authentication endpoints.",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
-  "basePath": "/api",
-  "schemes": ["http"],
-  "securityDefinitions": {
-    "BearerAuth": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header",
-      "description": "JWT accessToken. Format: Bearer {token}"
-    }
-  },
+  "host": "localhost:8000",
+  "basePath": "/api/auth",
   "tags": [
-    { "name": "Auth", "description": "Authentication & Registration" },
-    { "name": "Books", "description": "Book Management" },
-    { "name": "Admin", "description": "Admin Book Management" },
-    { "name": "Reviews", "description": "Book Reviews" },
-    { "name": "Comments", "description": "Book Comments" },
-    { "name": "Borrow", "description": "Borrowing Books" },
-    { "name": "Todos", "description": "User Todo List" }
+    {
+      "name": "User",
+      "description": "User Authentication"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin Authentication"
+    }
+  ],
+  "schemes": [
+    "http"
   ],
   "paths": {
-    "/auth/user-register": {
+    "/user-register": {
       "post": {
-        "tags": ["Auth"],
-        "summary": "Register a new user",
+        "description": "",
         "parameters": [
-          { "name": "body", "in": "body", "schema": { "$ref": "#/definitions/UserRegistrationRequest" } }
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "OTP sent" }
+          "200": {
+            "description": "OK"
+          }
         }
       }
     },
-    "/auth/verify-user": {
+    "/verify-user": {
       "post": {
-        "tags": ["Auth"],
-        "summary": "Verify user OTP and complete registration",
+        "description": "",
         "parameters": [
-          { "name": "body", "in": "body", "schema": { "$ref": "#/definitions/VerifyUserRequest" } }
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "otp": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
         ],
         "responses": {
-          "201": { "description": "User registered" }
+          "201": {
+            "description": "Created"
+          }
         }
       }
     },
-    "/auth/login": {
+    "/login": {
       "post": {
-        "tags": ["Auth"],
-        "summary": "Login as user or admin",
+        "description": "",
         "parameters": [
-          { "name": "body", "in": "body", "schema": { "$ref": "#/definitions/LoginRequest" } }
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "Login successful, returns accessToken and refreshToken" }
+          "200": {
+            "description": "OK"
+          }
         }
       }
     },
-    "/auth/admin-register": {
+    "/admin-register": {
       "post": {
-        "tags": ["Auth"],
-        "summary": "Register a new admin (admin only)",
-        "security": [{ "BearerAuth": [] }],
+        "description": "",
         "parameters": [
-          { "name": "body", "in": "body", "schema": { "$ref": "#/definitions/AdminRegistrationRequest" } }
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "OTP sent" }
+          "200": {
+            "description": "OK"
+          }
         }
       }
     },
-    "/auth/verify-admin": {
+    "/verify-admin": {
       "post": {
-        "tags": ["Auth"],
-        "summary": "Verify OTP and complete admin registration",
+        "description": "",
         "parameters": [
-          { "name": "body", "in": "body", "schema": { "$ref": "#/definitions/VerifyAdminRequest" } }
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "otp": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
         ],
         "responses": {
-          "201": { "description": "Admin registered" }
+          "201": {
+            "description": "Created"
+          }
         }
       }
     },
-    "/admin/add-book": {
+    "/refresh-token": {
       "post": {
-        "tags": ["Admin"],
-        "summary": "Add a new book (admin only, image upload)",
-        "consumes": ["multipart/form-data"],
-        "security": [{ "BearerAuth": [] }],
+        "description": "",
         "parameters": [
-          { "name": "image", "in": "formData", "type": "file", "required": true },
-          { "name": "title", "in": "formData", "type": "string", "required": true },
-          { "name": "description", "in": "formData", "type": "string", "required": true },
-          { "name": "author", "in": "formData", "type": "string", "required": true },
-          { "name": "category", "in": "formData", "type": "string", "required": true },
-          { "name": "pages", "in": "formData", "type": "integer", "required": true },
-          { "name": "publishedDate", "in": "formData", "type": "string", "required": true },
-          { "name": "availability", "in": "formData", "type": "string", "enum": ["hardcopy", "ebook", "audio"], "required": true },
-          { "name": "isPaid", "in": "formData", "type": "boolean", "required": true },
-          { "name": "price", "in": "formData", "type": "number" },
-          { "name": "status", "in": "formData", "type": "string", "enum": ["borrowable", "not-borrowable"], "required": true },
-          { "name": "isInShelf", "in": "formData", "type": "boolean" }
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "refreshToken": {
+                  "example": "any"
+                }
+              }
+            }
+          }
         ],
         "responses": {
-          "201": { "description": "Book added" },
-          "401": { "description": "Unauthorized" }
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
         }
-      }
-    },
-    "/books": {
-      "get": {
-        "tags": ["Books"],
-        "summary": "Get all books",
-        "responses": { "200": { "description": "List of books" } }
-      }
-    },
-    "/books/{id}": {
-      "get": {
-        "tags": ["Books"],
-        "summary": "Get a book by ID",
-        "parameters": [{ "name": "id", "in": "path", "type": "string", "required": true }],
-        "responses": { "200": { "description": "Book details" } }
-      },
-      "put": {
-        "tags": ["Books"],
-        "summary": "Update a book (admin only)",
-        "security": [{ "BearerAuth": [] }],
-        "consumes": ["multipart/form-data"],
-        "parameters": [
-          { "name": "id", "in": "path", "type": "string", "required": true },
-          { "name": "image", "in": "formData", "type": "file" },
-          { "name": "title", "in": "formData", "type": "string" },
-          { "name": "description", "in": "formData", "type": "string" },
-          { "name": "author", "in": "formData", "type": "string" },
-          { "name": "category", "in": "formData", "type": "string" },
-          { "name": "pages", "in": "formData", "type": "integer" },
-          { "name": "publishedDate", "in": "formData", "type": "string" },
-          { "name": "availability", "in": "formData", "type": "string", "enum": ["hardcopy", "ebook", "audio"] },
-          { "name": "isPaid", "in": "formData", "type": "boolean" },
-          { "name": "price", "in": "formData", "type": "number" },
-          { "name": "status", "in": "formData", "type": "string", "enum": ["borrowable", "not-borrowable"] },
-          { "name": "isInShelf", "in": "formData", "type": "boolean" }
-        ],
-        "responses": { "200": { "description": "Book updated" }, "401": { "description": "Unauthorized" } }
-      },
-      "delete": {
-        "tags": ["Books"],
-        "summary": "Delete a book (admin only)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [{ "name": "id", "in": "path", "type": "string", "required": true }],
-        "responses": { "200": { "description": "Book deleted" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/books/search": {
-      "get": {
-        "tags": ["Books"],
-        "summary": "Search books",
-        "parameters": [{ "name": "q", "in": "query", "type": "string" }],
-        "responses": { "200": { "description": "Search results" } }
-      }
-    },
-    "/reviews/{bookId}": {
-      "post": {
-        "tags": ["Reviews"],
-        "summary": "Add a review to a book (user)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [
-          { "name": "bookId", "in": "path", "type": "string", "required": true },
-          { "name": "rating", "in": "body", "schema": { "type": "integer", "minimum": 1, "maximum": 5 } },
-          { "name": "review", "in": "body", "schema": { "type": "string" } }
-        ],
-        "responses": { "201": { "description": "Review added" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/reviews/{reviewId}": {
-      "delete": {
-        "tags": ["Reviews"],
-        "summary": "Delete a review (user or admin)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [{ "name": "reviewId", "in": "path", "type": "string", "required": true }],
-        "responses": { "200": { "description": "Review deleted" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/comments/{bookId}": {
-      "post": {
-        "tags": ["Comments"],
-        "summary": "Add a comment to a book (user)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [
-          { "name": "bookId", "in": "path", "type": "string", "required": true },
-          { "name": "comment", "in": "body", "schema": { "type": "string" } }
-        ],
-        "responses": { "201": { "description": "Comment added" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/comments/{commentId}": {
-      "delete": {
-        "tags": ["Comments"],
-        "summary": "Delete a comment (user or admin)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [{ "name": "commentId", "in": "path", "type": "string", "required": true }],
-        "responses": { "200": { "description": "Comment deleted" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/borrows/{bookId}": {
-      "post": {
-        "tags": ["Borrow"],
-        "summary": "Borrow a hardcopy book (user)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [{ "name": "bookId", "in": "path", "type": "string", "required": true }],
-        "responses": { "201": { "description": "Book borrowed" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/borrows/return/{borrowId}": {
-      "post": {
-        "tags": ["Borrow"],
-        "summary": "Return a borrowed book (user)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [{ "name": "borrowId", "in": "path", "type": "string", "required": true }],
-        "responses": { "200": { "description": "Book returned" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/borrows": {
-      "get": {
-        "tags": ["Borrow"],
-        "summary": "Get all borrows for the logged-in user",
-        "security": [{ "BearerAuth": [] }],
-        "responses": { "200": { "description": "List of borrows" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/todos": {
-      "post": {
-        "tags": ["Todos"],
-        "summary": "Add a todo (user)",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [
-          { "name": "title", "in": "body", "schema": { "type": "string" } },
-          { "name": "targetCompletedDate", "in": "body", "schema": { "type": "string", "format": "date" } }
-        ],
-        "responses": { "201": { "description": "Todo created" }, "401": { "description": "Unauthorized" } }
-      },
-      "get": {
-        "tags": ["Todos"],
-        "summary": "Get all todos for the user",
-        "security": [{ "BearerAuth": [] }],
-        "responses": { "200": { "description": "List of todos" }, "401": { "description": "Unauthorized" } }
-      }
-    },
-    "/todos/{id}": {
-      "put": {
-        "tags": ["Todos"],
-        "summary": "Update a todo",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [
-          { "name": "id", "in": "path", "type": "string", "required": true },
-          { "name": "title", "in": "body", "schema": { "type": "string" } },
-          { "name": "targetCompletedDate", "in": "body", "schema": { "type": "string", "format": "date" } },
-          { "name": "completed", "in": "body", "schema": { "type": "boolean" } }
-        ],
-        "responses": { "200": { "description": "Todo updated" }, "401": { "description": "Unauthorized" } }
-      },
-      "delete": {
-        "tags": ["Todos"],
-        "summary": "Delete a todo",
-        "security": [{ "BearerAuth": [] }],
-        "parameters": [{ "name": "id", "in": "path", "type": "string", "required": true }],
-        "responses": { "200": { "description": "Todo deleted" }, "401": { "description": "Unauthorized" } }
       }
     }
   },
@@ -278,40 +208,126 @@
     "UserRegistrationRequest": {
       "type": "object",
       "properties": {
-        "name": { "type": "string", "example": "John Doe" },
-        "email": { "type": "string", "example": "johndoe@example.com" }
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "johndoe@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "SecurePassword123"
+        }
+      }
+    },
+    "UserRegistrationResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OTP sent successfully, please check your email"
+        }
       }
     },
     "VerifyUserRequest": {
       "type": "object",
       "properties": {
-        "name": { "type": "string", "example": "John Doe" },
-        "email": { "type": "string", "example": "johndoe@example.com" },
-        "otp": { "type": "string", "example": "1234" },
-        "password": { "type": "string", "example": "SecurePassword123" }
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "johndoe@example.com"
+        },
+        "otp": {
+          "type": "string",
+          "example": "1234"
+        },
+        "password": {
+          "type": "string",
+          "example": "SecurePassword123"
+        }
       }
     },
-    "LoginRequest": {
+    "VerifyUserResponse": {
       "type": "object",
       "properties": {
-        "email": { "type": "string", "example": "johndoe@example.com" },
-        "password": { "type": "string", "example": "SecurePassword123" }
+        "message": {
+          "type": "string",
+          "example": "User registered successfully"
+        }
+      }
+    },
+    "LoginUserRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "johndoe@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "SecurePassword123"
+        }
+      }
+    },
+    "LoginUserResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Login successful"
+        },
+        "accessToken": {
+          "type": "string",
+          "example": "jwt-access-token"
+        },
+        "refreshToken": {
+          "type": "string",
+          "example": "jwt-refresh-token"
+        }
       }
     },
     "AdminRegistrationRequest": {
       "type": "object",
       "properties": {
-        "name": { "type": "string", "example": "Admin User" },
-        "email": { "type": "string", "example": "admin@example.com" }
+        "name": {
+          "type": "string",
+          "example": "Admin User"
+        },
+        "email": {
+          "type": "string",
+          "example": "admin@example.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "AdminPassword123"
+        }
       }
     },
-    "VerifyAdminRequest": {
+    "AdminRegistrationResponse": {
       "type": "object",
       "properties": {
-        "name": { "type": "string", "example": "Admin User" },
-        "email": { "type": "string", "example": "admin@example.com" },
-        "otp": { "type": "string", "example": "1234" },
-        "password": { "type": "string", "example": "AdminPassword123" }
+        "message": {
+          "type": "string",
+          "example": "OTP sent successfully, please check your email"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Error message"
+        },
+        "field": {
+          "type": "string",
+          "example": "email"
+        }
       }
     }
   }

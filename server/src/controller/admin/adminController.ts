@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ValidationError } from "../../utils/errorHandler";
 import Book from "../../model/book";
 import User from "../../model/user";
+import Borrow from "../../model/borrow";
 
 // Add a book (admin only)
 export const addBook = async (
@@ -104,6 +105,21 @@ export const updateUser = async (
       return next(new ValidationError("User not found"));
     }
     res.status(200).json({ message: "User updated", user });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getAllBorrowedBooks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Find all borrows with status "borrowed"
+    const borrows = await Borrow.find({ status: "borrowed" })
+      .populate("user", "-password")
+      .populate("book");
+    res.status(200).json({ borrows });
   } catch (error) {
     next(error);
   }

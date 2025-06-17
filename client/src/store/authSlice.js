@@ -3,29 +3,36 @@ import { jwtDecode } from "jwt-decode";
 
 const getInitialAuthState = () => {
   const token = localStorage.getItem("token");
+  const userStr = localStorage.getItem("user");
   let role = null;
   let isAuthenticated = false;
   let user = null;
+  if (userStr && userStr !== "undefined") {
+    user = JSON.parse(userStr);
+  }
   if (token) {
     try {
       const decoded = jwtDecode(token);
       if (decoded.exp * 1000 > Date.now()) {
         role = decoded.role;
         isAuthenticated = true;
-        // Try to get user info from token (adjust these fields as per your backend)
-        user = {
-          name: decoded.name || decoded.username || decoded.email || "User",
-          email: decoded.email,
-          id: decoded.id,
-          // add more fields if your token has them
-        };
+        // If user is not in localStorage, fallback to token
+        if (!user) {
+          user = {
+            name: decoded.name || decoded.username || decoded.email || "User",
+            email: decoded.email,
+            id: decoded.id,
+          };
+        }
       } else {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
       }
     } catch {
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
     }
   }
   return {
@@ -49,6 +56,7 @@ const authSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       localStorage.setItem("token", action.payload.accessToken);
       localStorage.setItem("refreshToken", action.payload.refreshToken);
+      localStorage.setItem("user", JSON.stringify(action.payload.user)); // <-- Save user object
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -58,10 +66,12 @@ const authSlice = createSlice({
       state.refreshToken = null;
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user"); // <-- Remove user object
     },
     setUser: (state, action) => {
       state.user = action.payload.user;
       state.role = action.payload.role;
+      localStorage.setItem("user", JSON.stringify(action.payload.user)); // <-- Save user object
     },
   },
 });

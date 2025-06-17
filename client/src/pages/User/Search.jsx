@@ -7,9 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBooks, addFavorite, removeFavorite } from "../../store/bookSlice";
 import { setBorrows, addBorrow, updateBorrow } from "../../store/borrowSlice";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const books = useSelector((state) => state.books.all);
   const favorites = useSelector((state) => state.books.favorites);
   const user = useSelector((state) => state.auth.user);
@@ -21,6 +23,7 @@ const Search = () => {
   const [borrowId, setBorrowId] = useState(null);
   const [borrowLoading, setBorrowLoading] = useState(false);
   const [currentBorrow, setCurrentBorrow] = useState(null);
+  const [selectedFormat, setSelectedFormat] = useState("hardcopy");
 
   // Fetch books and save to redux
   useEffect(() => {
@@ -117,6 +120,15 @@ const Search = () => {
 
   // List of all possible formats
   const allFormats = ["ebook", "hardcopy", "audio"];
+  const availableFormats = selectedBook
+    ? Array.isArray(selectedBook.availability)
+      ? selectedBook.availability.map((a) => a.toLowerCase())
+      : [(selectedBook.availability || "").toLowerCase()]
+    : [];
+
+  const onlyDigital =
+    availableFormats.length === 1 &&
+    (availableFormats[0] === "audio" || availableFormats[0] === "ebook");
 
   return (
     <div className="w-full max-w-7xl mx-auto h-[85vh] overflow-x-auto px-4 py-6">
@@ -172,7 +184,7 @@ const Search = () => {
                 </div>
 
                 <div className="flex justify-center">
-                  <p>{book.rating}</p>
+                  <p>{book.rating ?? "N/A"}</p>
                 </div>
 
                 <div className="truncate text-start flex flex-col justify-center">
@@ -305,7 +317,7 @@ const Search = () => {
                   <strong>Pages:</strong> {selectedBook.pages || "N/A"}
                 </p>
                 <p>
-                  <strong>Rating:</strong> {selectedBook.rating || "N/A"}
+                  <strong>Rating:</strong> {selectedBook.rating ?? "N/A"}
                 </p>
               </div>
             </div>
@@ -316,12 +328,7 @@ const Search = () => {
               </p>
               <div className="flex gap-2 flex-wrap">
                 {allFormats.map((format) => {
-                  const available = Array.isArray(selectedBook.availability)
-                    ? selectedBook.availability
-                        .map((a) => a.toLowerCase())
-                        .includes(format)
-                    : (selectedBook.availability || "").toLowerCase() ===
-                      format;
+                  const available = availableFormats.includes(format);
                   return (
                     <span
                       key={format}
@@ -349,22 +356,73 @@ const Search = () => {
               </div>
             </div>
 
+            {/* Only show format selector if hardcopy is available AND there is more than one format */}
+            {availableFormats.includes("hardcopy") &&
+              availableFormats.length > 1 && (
+                <div className="mt-4">
+                  <label className="font-semibold text-sm mb-2 text-gray-800">
+                    Choose Format:
+                  </label>
+                  <select
+                    className="ml-2 border rounded px-2 py-1"
+                    value={selectedFormat}
+                    onChange={(e) => setSelectedFormat(e.target.value)}
+                  >
+                    {allFormats
+                      .filter((format) => availableFormats.includes(format))
+                      .map((format) => (
+                        <option key={format} value={format}>
+                          {format.charAt(0).toUpperCase() + format.slice(1)}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+
             <div className="mt-6 flex gap-4">
-              {!currentBorrow ? (
-                // User has never borrowed this book
+              {/* If only digital, always show Buy */}
+              {onlyDigital ? (
                 <button
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 disabled:opacity-50"
-                  disabled={borrowLoading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer px-4 py-2 rounded-md text-sm disabled:opacity-50"
                   onClick={() =>
-                    handleBorrow(selectedBook._id || selectedBook.id)
+                    navigate("/dashboard/payment", {
+                      state: { book: selectedBook },
+                    })
                   }
                 >
-                  {borrowLoading ? "Borrowing..." : "Borrow"}
+                  Buy
+                </button>
+              ) : !currentBorrow ? (
+                // User has never borrowed this book
+                <button
+                  className={`${
+                    selectedFormat === "hardcopy"
+                      ? "bg-blue-600 hover:bg-blue-700"
+                      : "bg-blue-600 hover:bg-blue-700"
+                  } text-white px-4 py-2 rounded-md text-sm disabled:opacity-50`}
+                  disabled={borrowLoading}
+                  onClick={() => {
+                    if (selectedFormat === "hardcopy") {
+                      handleBorrow(selectedBook._id || selectedBook.id);
+                    } else {
+                      navigate("/dashboard/payment", {
+                        state: { book: selectedBook },
+                      });
+                    }
+                  }}
+                >
+                  {borrowLoading
+                    ? selectedFormat === "hardcopy"
+                      ? "Borrowing..."
+                      : "Processing..."
+                    : selectedFormat === "hardcopy"
+                    ? "Borrow"
+                    : "Buy"}
                 </button>
               ) : !currentBorrow.returned ? (
                 // User has borrowed and not returned: show "Return Book"
                 <button
-                  className="bg-orange-600 text-white px-4 py-2 rounded-md text-sm hover:bg-orange-700 disabled:opacity-50"
+                  className="bg-orange-600 text-white cursor-pointer px-4 py-2 rounded-md text-sm hover:bg-orange-700 disabled:opacity-50"
                   disabled={borrowLoading}
                   onClick={() => handleReturn(currentBorrow._id)}
                 >
@@ -373,7 +431,7 @@ const Search = () => {
               ) : (
                 // User has borrowed and returned: show "Returned"
                 <button
-                  className="bg-green-600 text-white px-4 py-2 rounded-md text-sm disabled:opacity-50"
+                  className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-md text-sm disabled:opacity-50"
                   disabled
                 >
                   Returned

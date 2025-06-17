@@ -15,6 +15,7 @@ const Home = () => {
   const [books, setBooks] = useState([]);
   const user = useSelector((state) => state.auth.user);
   const userBorrows = useSelector((state) => state.borrows.all);
+  const booksList = useSelector((state) => state.books.all);
   const myBorrows = useMemo(
     () =>
       userBorrows.filter((b) => {
@@ -70,10 +71,13 @@ const Home = () => {
     }
   };
 
+  const getBookById = (id) =>
+    booksList.find((b) => b._id === id || b.id === id);
+
   console.log("myBorrows", myBorrows);
 
   return (
-    <div className="w-[100%] max-w-7xl mx-auto  h-[85vh]  flex  flex-col gap-6 overflow-x-hidden px-4 py-6 hide-scrollbar">
+    <div className="w-[100%] max-w-7xl mx-auto h-[85vh]  flex  flex-col gap-6 overflow-x-hidden px-4 py-6 hide-scrollbar">
       {/* Top Section */}
       <div className="flex flex-col lg:flex-row gap-4 w-full">
         {/* Quote Box */}
@@ -179,7 +183,12 @@ const Home = () => {
                 ...new Map(
                   myBorrows.map((borrow) => {
                     const borrowObj = borrow.borrow ? borrow.borrow : borrow;
-                    return [borrowObj._id, borrowObj];
+                    // Try to get the full book object
+                    const book =
+                      borrowObj.book && typeof borrowObj.book === "object"
+                        ? borrowObj.book
+                        : getBookById(borrowObj.book);
+                    return [borrowObj._id, { ...borrowObj, book }];
                   })
                 ).values(),
               ].map((borrowObj) => (
@@ -202,7 +211,7 @@ const Home = () => {
                       <span className="text-gray-400">/5</span>
                     </p>
                     <button
-                      className="bg-orange-600 text-white px-2 py-1 rounded text-xs mt-2 hover:bg-orange-700"
+                      className="bg-orange-600 cursor-pointer text-white px-2 py-1 rounded text-xs mt-2 hover:bg-orange-700"
                       onClick={() => handleReturn(borrowObj._id)}
                     >
                       Return

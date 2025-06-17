@@ -60,6 +60,7 @@ const Nav = () => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const userName = user?.name || localStorage.getItem("userName") || "User";
 
   const toggleMenu = () => setMenuOpen((open) => !open);
 
@@ -193,7 +194,7 @@ const Nav = () => {
         <button
           ref={buttonRef}
           onClick={toggleMenu}
-          className="md:hidden text-2xl text-primary focus:outline-none ml-auto"
+          className="md:hidden text-2xl text-primary cursor-pointer focus:outline-none ml-auto"
           aria-label="Toggle menu"
         >
           {menuOpen ? <HiX /> : <HiMenu />}
@@ -207,7 +208,7 @@ const Nav = () => {
             className="h-7 w-7 rounded-full object-cover"
           />
           <p className="font-medium text-black truncate">
-            {user?.name || "User"}
+            {userName}
           </p>
           <MdArrowDropDown className="text-base text-black" />
         </div>
@@ -245,7 +246,9 @@ const Nav = () => {
                 {loading ? (
                   <div className="p-2 text-xs text-gray-500">Loading...</div>
                 ) : filteredMobileBooks.length === 0 ? (
-                  <div className="p-2 text-xs text-gray-500">No books found.</div>
+                  <div className="p-2 text-xs text-gray-500">
+                    No books found.
+                  </div>
                 ) : (
                   filteredMobileBooks.slice(0, 5).map((book) => (
                     <div
@@ -253,7 +256,9 @@ const Nav = () => {
                       className="p-2 hover:bg-gray-100 cursor-pointer text-xs"
                       onClick={() => {
                         navigate(
-                          `/dashboard/search?q=${encodeURIComponent(book.title)}`
+                          `/dashboard/search?q=${encodeURIComponent(
+                            book.title
+                          )}`
                         );
                         setMenuOpen(false);
                         setMobileSearchQuery(book.title);
@@ -283,7 +288,7 @@ const Nav = () => {
               className="h-7 w-7 rounded-full object-cover"
             />
             <p className="font-medium text-black truncate">
-              {user?.name || "User"}
+              {userName}
             </p>
             <MdArrowDropDown className="text-base text-black" />
           </div>

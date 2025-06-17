@@ -22,7 +22,7 @@ const todoRoute_1 = __importDefault(require("./src/routes/todoRoute"));
 const port = process.env.PORT || 8080;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "*",
+    origin: "http://localhost:5173",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
 }));

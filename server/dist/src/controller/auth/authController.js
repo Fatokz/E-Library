@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyAdmin = exports.adminRegistration = exports.login = exports.verifyUser = exports.userRegistration = void 0;
+exports.refreshAccessToken = exports.verifyAdmin = exports.adminRegistration = exports.login = exports.verifyUser = exports.userRegistration = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const errorHandler_1 = require("../../utils/errorHandler");
@@ -139,3 +139,35 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.verifyAdmin = verifyAdmin;
+const refreshAccessToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Get refresh token from cookie or body
+        const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+        if (!refreshToken) {
+            res.status(401).json({ message: "No refresh token provided" });
+            return;
+        }
+        // Verify refresh token
+        jsonwebtoken_1.default.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                res.status(403).json({ message: "Invalid refresh token" });
+                return;
+            }
+            // Issue new access token
+            const accessToken = jsonwebtoken_1.default.sign({ id: decoded.id, role: decoded.role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+            // Optionally, issue a new refresh token here if you want to rotate
+            // const newRefreshToken = jwt.sign(
+            //   { id: decoded.id, role: decoded.role },
+            //   process.env.REFRESH_TOKEN_SECRET as string,
+            //   { expiresIn: "7d" }
+            // );
+            // setCookie(res, "refreshToken", newRefreshToken);
+            (0, setCookies_1.setCookie)(res, "accessToken", accessToken);
+            res.status(200).json({ accessToken });
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.refreshAccessToken = refreshAccessToken;

@@ -53,6 +53,9 @@ const Onboard = () => {
         const response = await axios.post("auth/user-register", payload);
         console.log("Register response:", response.data);
 
+        // Save name to localStorage for later use
+        localStorage.setItem("userName", values.name);
+
         toast.success("OTP sent successfully!");
         resetForm();
         navigate("/verify", { state: values });

@@ -9,6 +9,6 @@ const todoController_1 = require("../controller/user/todoController");
 const router = express_1.default.Router();
 router.post("/", isAuthenticated_1.isAuthenticated, todoController_1.addTodo);
 router.get("/", isAuthenticated_1.isAuthenticated, todoController_1.getTodos);
-router.put("/:id", isAuthenticated_1.isAuthenticated, todoController_1.updateTodo);
+router.patch("/:id", isAuthenticated_1.isAuthenticated, todoController_1.updateTodo);
 router.delete("/:id", isAuthenticated_1.isAuthenticated, todoController_1.deleteTodo);
 exports.default = router;

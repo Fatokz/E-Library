@@ -4,6 +4,7 @@ import {
   getAllUsers,
   deleteUser,
   updateUser,
+  getAllBorrowedBooks,
 } from "../controller/admin/adminController";
 import { isAdmin } from "../middleware/isAdmin";
 import { isAuthenticated } from "../middleware/isAuthenticated";
@@ -20,6 +21,12 @@ router.post(
   addBook,
 );
 router.get("/users", isAuthenticated, isAdmin, getAllUsers);
+router.get(
+  "/borrowed-books",
+  isAuthenticated,
+  isAdmin,
+  getAllBorrowedBooks
+);
 router.delete("/users/:id", isAuthenticated, isAdmin, deleteUser);
 router.put("/users/:id", isAuthenticated, isAdmin, updateUser);
 

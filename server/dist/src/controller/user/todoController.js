@@ -51,8 +51,8 @@ exports.getTodos = getTodos;
 const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const updateData = req.body;
-        const todo = yield todo_1.default.findOneAndUpdate({ _id: id, user: req.user._id }, updateData, { new: true });
+        const { completed, title, targetCompletedDate } = req.body;
+        const todo = yield todo_1.default.findOneAndUpdate({ _id: id, user: req.user._id }, { completed: "true", title, targetCompletedDate }, { new: true });
         if (!todo)
             return next(new errorHandler_1.ValidationError("Todo not found"));
         res.json({ message: "Todo updated", todo });
@@ -62,6 +62,26 @@ const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.updateTodo = updateTodo;
+// // complete a todo
+// export const completeTodo = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { id } = req.params;
+//     const updateData = req.body;
+//     const todo = await Todo.findOneAndUpdate(
+//       { _id: id, user: (req as any).user._id },
+//       updateData,
+//       { new: true }
+//     );
+//     if (!todo) return next(new ValidationError("Todo not found"));
+//     res.json({ message: "Todo updated", todo });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 // Delete a todo
 const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {

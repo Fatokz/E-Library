@@ -19,6 +19,7 @@ import Catalog from "../pages/Admin/Catalog";
 import Books from "../pages/Admin/Books";
 import User from "../pages/Admin/User";
 import ProtectedRoute from "./ProtectedRoute";
+import Payment from "../pages/User/Payment";
 
 const RoutesPage = () => {
   return (
@@ -39,7 +40,7 @@ const RoutesPage = () => {
             <Route path="search" element={<Search />} />
             <Route path="shelf" element={<Shelf />} />
             <Route path="todo" element={<TodoList />} />
-            
+            <Route path="payment" element={<Payment />} />
           </Route>
         </Route>
 
@@ -51,7 +52,6 @@ const RoutesPage = () => {
             <Route path="books" element={<Books />} />
             <Route path="user" element={<User />} />
           </Route>
-
         </Route>
       </Routes>
     </Router>
