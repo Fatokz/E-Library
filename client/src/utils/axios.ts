@@ -2,8 +2,8 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { toast } from "sonner"
 
-// export const baseURL = "http://localhost:8080/api";
-export const baseURL = "https://booksync.onrender.com/api";
+export const baseURL = "http://localhost:8080/api";
+// export const baseURL = "https://booksync.onrender.com/api";
 
 const instance = axios.create({
   baseURL,
