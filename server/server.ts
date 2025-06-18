@@ -21,8 +21,8 @@ const port = process.env.PORT || 8080;
 const app = express();
 app.use(
   cors({
-    // origin: ["https://booksync-amb.vercel.app"],
-    origin: ["http://localhost:5173"],
+    origin: ["https://booksync-amb.vercel.app"],
+    // origin: ["http://localhost:5173"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
