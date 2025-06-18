@@ -82,6 +82,25 @@ const Signin = () => {
     },
   });
 
+  const handleLogin = async (values) => {
+    setLoading(true);
+    try {
+      const res = await axios.post("/auth/login", values);
+      // Simulate getting the name from localStorage
+      const userName = localStorage.getItem("userName");
+      const user = {
+        ...res.data.user, // whatever your backend returns (likely just email)
+        name: userName, // add the name from localStorage
+      };
+      dispatch(loginSuccess({ user, ...res.data }));
+      navigate("/dashboard");
+    } catch (err) {
+      // handle error
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-gradient-to-b to-[#ffffff] text-white flex flex-col gap-5 items-center justify-center">
       <TopWave />
