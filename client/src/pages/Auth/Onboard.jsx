@@ -54,10 +54,7 @@ const Onboard = () => {
         console.log("Register response:", response.data);
 
         // Save name to localStorage for later use
-        localStorage.setItem("userName", values.name);
-
-        toast.success("OTP sent successfully!");
-        resetForm();
+        localStorage.setItem("userName", values.name); // <-- Save name
         navigate("/verify", { state: values });
       } catch (error) {
         console.error("Error response:", error?.response?.data);

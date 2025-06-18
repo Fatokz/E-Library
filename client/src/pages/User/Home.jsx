@@ -196,23 +196,41 @@ const Home = () => {
                   key={borrowObj._id}
                   className="w-[150px] md:w-[180px] rounded-lg p-2 bg-blue-50 shadow-md flex-shrink-0"
                 >
-                  <div className="w-full h-32 mb-2">
-                    <img
-                      src={borrowObj.book?.image || learn}
-                      alt={borrowObj.book?.title}
-                      className="w-full h-full object-fit rounded"
-                    />
+                  <div className="w-full h-32 mb-2 flex items-center justify-center bg-gray-100 rounded">
+                    {borrowObj.book ? (
+                      <img
+                        src={borrowObj.book.image || learn}
+                        alt={borrowObj.book.title}
+                        className="w-full h-full object-fit rounded"
+                      />
+                    ) : (
+                      <span className="text-xs text-red-500 text-center">
+                        Book deleted
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs font-medium space-y-1">
-                    <p className="truncate">{borrowObj.book?.title}</p>
-                    <p className="text-gray-600">{borrowObj.book?.author}</p>
+                    <p className="truncate">
+                      {borrowObj.book ? (
+                        borrowObj.book.title
+                      ) : (
+                        <span className="text-red-500">Book deleted</span>
+                      )}
+                    </p>
+                    <p className="text-gray-600">
+                      {borrowObj.book ? borrowObj.book.author : ""}
+                    </p>
                     <p className="text-yellow-500">
-                      {borrowObj.book?.rating || "4.5"}{" "}
+                      {borrowObj.book ? borrowObj.book.rating || "4.5" : "--"}{" "}
                       <span className="text-gray-400">/5</span>
                     </p>
                     <button
                       className="bg-orange-600 cursor-pointer text-white px-2 py-1 rounded text-xs mt-2 hover:bg-orange-700"
                       onClick={() => handleReturn(borrowObj._id)}
+                      disabled={!borrowObj.book}
+                      title={
+                        !borrowObj.book ? "Book already deleted" : "Return"
+                      }
                     >
                       Return
                     </button>

@@ -60,7 +60,7 @@ const Nav = () => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
-  const userName = user?.name || localStorage.getItem("userName") || "User";
+  const userName = localStorage.getItem("userName") || user?.name || "User";
 
   const toggleMenu = () => setMenuOpen((open) => !open);
 

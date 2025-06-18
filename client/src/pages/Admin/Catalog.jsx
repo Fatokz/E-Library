@@ -12,7 +12,8 @@ const Catalog = () => {
     const fetchBorrows = async () => {
       try {
         const res = await axios.get("/admin/borrowed-books");
-        await dispatch(setBorrows(res.data));
+        // Save only the array to Redux
+        dispatch(setBorrows(res.data.borrows || []));
         console.log("Fetched borrows:", res.data);
       } catch (err) {
         dispatch(setBorrows([]));
@@ -22,7 +23,7 @@ const Catalog = () => {
   }, [dispatch]);
 
   if (loading) return <div className="p-8 text-center">Loading...</div>;
-  if (!borrows || borrows.length === 0)
+  if (!Array.isArray(borrows) || borrows.length === 0)
     return (
       <div className="p-8 text-center text-red-600">
         No borrow records found.
@@ -43,7 +44,7 @@ const Catalog = () => {
           </tr>
         </thead>
         <tbody>
-          {borrows.borrows?.map((borrow, idx) => {
+          {borrows.map((borrow, idx) => {
             const borrowObj = borrow.borrow ? borrow.borrow : borrow;
             return (
               <tr key={borrowObj._id || idx} className="border-t">
