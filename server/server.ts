@@ -58,7 +58,6 @@ app.use("/api/todos", todoRoute);
 app.get("/", (req, res) => {
   res.send({ message: "Welcome to the Bookstore Auth API" });
 });
-
 const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/api`);
 });
