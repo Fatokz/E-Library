@@ -184,7 +184,14 @@ const Search = () => {
                 </div>
 
                 <div className="flex justify-center">
-                  <p>{book.rating ?? "N/A"}</p>
+                  <p className="text-yellow-500">
+                    {book.rating !== undefined &&
+                    book.rating !== null &&
+                    book.rating !== ""
+                      ? Number(book.rating)
+                      : "N/A"}{" "}
+                    <span className="text-gray-400">/5</span>
+                  </p>
                 </div>
 
                 <div className="truncate text-start flex flex-col justify-center">
@@ -296,7 +303,12 @@ const Search = () => {
                   <strong>Author:</strong> {selectedBook.author}
                 </p>
                 <p>
-                  <strong>Rating:</strong> {selectedBook.rating}
+                  <strong>Rating:</strong>{" "}
+                  {typeof selectedBook.rating === "number" &&
+                  !isNaN(selectedBook.rating)
+                    ? selectedBook.rating
+                    : "N/A"}{" "}
+                  <span className="text-gray-400">/5</span>
                 </p>
                 <p>
                   <strong>Category:</strong>{" "}
@@ -315,9 +327,6 @@ const Search = () => {
                 </p>
                 <p>
                   <strong>Pages:</strong> {selectedBook.pages || "N/A"}
-                </p>
-                <p>
-                  <strong>Rating:</strong> {selectedBook.rating ?? "N/A"}
                 </p>
               </div>
             </div>

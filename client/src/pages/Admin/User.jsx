@@ -75,7 +75,7 @@ const User = () => {
         />
       </div>
 
-      <div className="w-full overflow-x-auto">
+      <div className="w-full">
         {/* Table header for md+ screens */}
         <ul className="hidden md:grid grid-cols-4 text-sm font-medium border-b border-gray-300 pb-2">
           <li>Name</li>
@@ -84,13 +84,13 @@ const User = () => {
           <li>Actions</li>
         </ul>
 
-        {/* User list */}
+        {/* User list with vertical scroll only for the list */}
         <div
           className="overflow-y-auto mt-2 flex flex-col gap-4 pr-2"
           style={{ maxHeight: "55vh" }}
         >
           {paginatedUsers.length === 0 ? (
-            <div className="text-center  text-red-700 py-8">No users found.</div>
+            <div className="text-center text-red-700 py-8">No users found.</div>
           ) : (
             paginatedUsers.map((user) => (
               <div

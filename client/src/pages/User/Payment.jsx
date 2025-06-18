@@ -122,7 +122,9 @@ const Payment = () => {
                 className="w-full bg-primary text-white py-2 rounded-md cursor-pointer transition-colors duration-200"
                 disabled={paying}
               >
-                {paying ? "Processing..." : "Pay"}
+                {paying
+                  ? "Processing..."
+                  : `Pay ₦${book?.price ? book.price : ""}`}
               </button>
             </form>
           </div>
